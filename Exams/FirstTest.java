@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class FirstTest{
    
-   final static public int[] INT_ARRAY = {1,2,3,1,5,6,7,8,9,1};      // array for task 2
+   final static public int[] INT_ARRAY = {1,2,3,1,5,6,5,5,9,1};      // array for task 2
    
    // task 1
    public static void average()
@@ -28,11 +28,15 @@ public class FirstTest{
    // this is going to be ugly and inefficient, sorry
    public static void searchForDuplicates()
    {
-      for (int i = 0; i < INT_ARRAY.length; i++)
+      for (int i = 0; i < INT_ARRAY.length-1; i++)
       {
          for (int j = i+1; j < INT_ARRAY.length; j++)
          {
-            if (INT_ARRAY[i] == INT_ARRAY[j]) System.out.println("duplicate: " + INT_ARRAY[j]);
+            if (INT_ARRAY[i] == INT_ARRAY[j])
+            {
+               System.out.println("duplicate: " + INT_ARRAY[j]);
+               //
+            }
          }
       }      
    }
