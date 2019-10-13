@@ -121,11 +121,16 @@ public class Menu{
       System.out.print(" What is the name of the user? If you want to return, input \"return=\" \n");
       System.out.print(" >");
       
-      switch(input().toLowerCase())
+      String temp = input().toLowerCase();
+      
+      switch(temp)
       {
          case "return": this.screenNumber = 1;  break;
          case "quit":   this.screenNumber = 1;  break;
-         default:       this.screenNumber = 5;  break;
+         default:       
+            this.screenNumber = 1;
+            addNewUser(temp);
+            break;
       }
    }
    
@@ -186,5 +191,11 @@ public class Menu{
       Backend system = new Backend();
       system.displayAllContents();
       System.out.println("------------------------------------------------");
+   }
+   
+   public void addNewUser(String name)
+   {
+      Backend system = new Backend();
+      system.addNewUser("basic", "CPR12345", "true", name);   
    }
 }
