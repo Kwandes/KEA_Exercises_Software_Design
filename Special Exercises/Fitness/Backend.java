@@ -46,6 +46,21 @@ public class Backend {
       }
    }
    
+   // Employee adding
+   public void addNewUser(String type, String cpr, String name)
+   {
+      System.out.print("adding new user...");
+      String userID = "E" + Character.toUpperCase(type.charAt(0)) + cpr.charAt(3) + cpr.charAt(5) + cpr.charAt(7);
+      String userLine = "\n" + userID + " " + type + " " + cpr + " "  + name;
+      try{    
+           FileWriter file = new FileWriter(FILE_NAME, true);    
+           file.write(userLine);    
+           file.close();    
+          }
+      catch(Exception e){  System.out.println("error: " + e); }
+   
+   }
+   
    // Member adding
    public void addNewUser(String type, String cpr, String paymentStatus, String name)
    {

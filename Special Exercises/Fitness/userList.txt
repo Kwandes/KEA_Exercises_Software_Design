@@ -2,10 +2,11 @@ EA111 admin CPR69420 Jan
 MB112 basic CPR12223 true Jeff
 MP113 full CPR11223 false Jessica
 EI114 instructor CPR22114 Chad
-Mp24 full CPR12345 true test
-Mp24 full CPR12345 true test2
-MP135 full CPR12345 true test3
-MB135 basic CPR12345 true dave
-MA135 admin CPR12345 false maja
-MA135 admin CPR12345 false maja 2.0
-MA132 a CPR12312 false MAJA 4.0
+MB135 basic CPR12345 true Dave
+EA111 admin CPR11111 test1
+EI222 instructor CPR22222 test2
+MB333 basic CPR33333 true test3
+MF444 full CPR44444 true test4
+MB444 basic CPR44444 false test5
+MF666 full CPR66666 false test6
+EA135 admin CPR12345 test7

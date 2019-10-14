@@ -1,11 +1,11 @@
-// Fitness Exercise, Menu setup
+// Fitness Exercise, User Interface setup
 // Jan Bogoryja-Zakrzewski, Dat19i
 
 import java.util.Scanner;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 
-public class Menu{
+public class Interface{
 
    String title;
    boolean running;
@@ -15,7 +15,7 @@ public class Menu{
    
    //Region - Menu navigation
    //-------------------------------------------------------------
-   public Menu(String appName)
+   public Interface(String appName)
    {
       this.title = appName;
       this.running = true;
@@ -47,7 +47,7 @@ public class Menu{
       topBar("Main Menu");
       
       System.out.println(" What would you like to do: ");
-      System.out.print(" 1. See all users \n 2. Modify a user \n 3. Add a new user \n 4. Settings \n 5. Quit \n");
+      System.out.print(" [1] See all users \n [2] Modify a user \n [3] Add a new user \n [4] Settings \n [5] Quit \n");
       System.out.print(" >");
       
       switch(input().toLowerCase())
@@ -70,7 +70,7 @@ public class Menu{
       displayAllUsers();
       
       System.out.println(" What would you like to do: ");
-      System.out.print(" 1. Search for a specific user \n 2. Modify a user \n 3. Add a new user \n 4. Main Menu \n");
+      System.out.print(" [1] Search for a specific user \n [2] Modify a user \n [3] Add a new user \n [4] Main Menu \n");
       System.out.print(" >");
       
       switch(input().toLowerCase())
@@ -104,7 +104,7 @@ public class Menu{
    {
       topBar("Modify user");
       
-      System.out.print(" Input User name or CPR number. If you want to return, input \"return=\" \n");
+      System.out.print(" Input User name or CPR number. If you want to return, input \"return\" \n");
       System.out.print(" >");
       
       switch(input().toLowerCase())
@@ -122,7 +122,7 @@ public class Menu{
       if ( !adminLogon()) this.screenNumber = 1;
       else
       {
-         System.out.print(" What is the name of the user? If you want to return, input \"return=\" \n");
+         System.out.print(" What is the name of the user ? If you want to return, type \"return\" \n");
          System.out.print(" >");
          
          String tempInput = input().toLowerCase();
@@ -146,13 +146,13 @@ public class Menu{
       
       System.out.print("Here are your options: \n");
       System.out.print(" - Suck a dick \n");
-      System.out.print(" 1. Main Menu \n");
+      System.out.print(" [1] Main Menu \n");
       System.out.print(" >");
       
       switch(input().toLowerCase())
       {
          case "1":            this.screenNumber = 1;  break;
-         case "main menu":    this.screenNumber = 1;  break;
+         case "main":    this.screenNumber = 1;  break;
          case "quit":         this.screenNumber = 1;  break;
          default:             this.screenNumber = 6;  break;
       }
@@ -198,6 +198,8 @@ public class Menu{
    
    public boolean adminLogon()
    {
+      if(checkPerms()) return true;
+      
       System.out.println("you need admin permissions to perform this action.");
       System.out.print("password:>");
       if ( input().equals(ADMIN_PASSWORD))
@@ -233,11 +235,6 @@ public class Menu{
       
       boolean repeat = true;
       
-      // Name
-      //System.out.println("What is the name of the new user?");
-      //System.out.print(" >");
-      //name = input().toUpperCase();
-      
       // CPR
       System.out.println("What is their CPR? Remember, 5 digits");
       
@@ -260,87 +257,124 @@ public class Menu{
       repeat = true;
       
       // Type
-      System.out.println("What is the type of the user:
-                           + "\n[1]an employee
+      System.out.println("What is the type of the user:"
+                           + "\n[1]an employee"
                            + "\n[2]a member");
       System.out.print(" >");
-      type = input();
+      type = input().toLowerCase();
+      System.out.println("------------------------------------------------");
       
       while(repeat)
       {
          if(type.equals("employee") || type.equals("e") || type.equals("1"))
          {
-            System.out.println("What is their position, an admin or a Instructor?");
+            System.out.println("What is their position:"
+                                 + "\n[1]an admin"
+                                 + "\n[2]a Instructor");
             System.out.print(" >");
+            
             type = input().toLowerCase();
+            
+            System.out.println("------------------------------------------------");
             while(repeat)
             {
                if( type.equals("admin") || type.equals("a") || type.equals("1"))
                {
-               
+                  type = "admin";
+                  repeat = false;
                }
-               else if ( type.equals("
+               else if ( type.equals("instructor") || type.equals("i") || type.equals("2"))
+               {
+                  type = "instructor";
+                  repeat = false;
+               }
+               else
+               {
+                  System.out.println("Incorrect type. Please use either admin or instructor!");
+                  System.out.print(" >");
+                  type = input().toLowerCase();
+                  System.out.println("------------------------------------------------");
+               }
             }
-            repeat = false;
          }
+         
+         
          else if ( type.equals("member") || type.equals("m") || type.equals("2"))
          {
-            type = "member";
-            repeat = false;
+            System.out.println("What is their membership type:"
+                                 + "\n[1]basic"
+                                 + "\n[2]full");
+            System.out.print(" >");
+            System.out.println("------------------------------------------------");
+            
+            type = input().toLowerCase();
+            while(repeat)
+            {
+               System.out.println("DEBUGGING <userType - member>");
+               
+               if( type.equals("basic") || type.equals("b") || type.equals("1"))
+               {
+                  type = "basic";
+                  repeat = false;
+               }
+               else if ( type.equals("full") || type.equals("f") || type.equals("2"))
+               {
+                  type = "full";
+                  repeat = false;
+               }
+               else
+               {
+                  System.out.println("Incorrect type. Please use either basic or full!");
+                  System.out.print(" >");
+                  type = input().toLowerCase();
+                  System.out.println("------------------------------------------------");
+               }
+            }
+            
+            // Payed?
+            System.out.println("Did they pay for their membership:"
+                                 + "\n[1]Yes"
+                                 + "\n[2]No");
+            System.out.print(" >");
+            System.out.println("------------------------------------------------");
+            
+            paymentStatus = input().toLowerCase();
+            
+            repeat = true;
+            
+            while(repeat)
+            {
+               if( paymentStatus.equals("yes") || paymentStatus.equals("y") || paymentStatus.equals("1"))
+               {
+                  paymentStatus = "true";
+                  repeat = false;
+               }
+               else if ( paymentStatus.equals("no") || paymentStatus.equals("n") || paymentStatus.equals("2"))
+               {
+                  paymentStatus = "false";
+                  repeat = false;
+               }
+               else
+               {
+                  System.out.println("Incorrect type. Please use either yes or no!");
+                  System.out.print(" >");
+                  paymentStatus = input().toLowerCase();
+                  System.out.println("------------------------------------------------");
+               }
+            }
          }
          else
          {
             System.out.println("Incorrect type. Please use either employee or member");
             System.out.print(" >");
             type = input().toLowerCase();
+            System.out.println("------------------------------------------------");
          }
       
       }
       repeat = true;
       
-      if(type.equals("employee") || type.equals("e") || type.equals("1"))
-      {
-         
-         
-         while( !type.equals("admin") && !type.equals("instructor") && !type.equals("a") && !type.equals("i"))
-         {
-            System.out.println("Incorrect type. Please use either admin or instructor");
-            System.out.print(" >"); 
-            type = input().toLowerCase();
-         }
-         
-      }
-      
-      if(type.equals("member") || type.equals("m"))
-      {
-         System.out.println("What is their membership, basic or Full?");
-         System.out.print(" >");
-         type = input().toLowerCase();
-         
-         while( !type.equals("basic") && !type.equals("full") && !type.equals("b") && !type.equals("f"))
-         {
-            System.out.println("Incorrect type. Please use either basic or full");
-            System.out.print(" >");
-            type = input().toLowerCase();
-         }
-         
-         // Payed?
-         System.out.println("Did they pay for their membership? (Yes/No)");
-         System.out.print(" >");
-         
-         paymentStatus = input().toLowerCase();
-         
-         while( !type.equals("yes") && !type.equals("no") && !type.equals("y") && !type.equals("n"))
-         {
-            System.out.println("Incorrect answer. YES or NO??");
-            System.out.print(" >");
-            paymentStatus = input().toLowerCase();
-         }
-      }
-      
-      
-      
-      
-      system.addNewUser(type, cpr, paymentStatus, name);   
+      if(type.equals("admin") || type.equals("instructor")) system.addNewUser(type, cpr, name);   
+      else system.addNewUser(type, cpr, paymentStatus, name);
    }
 }

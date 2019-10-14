@@ -5,7 +5,7 @@ public class FitnessMain {
 
    public static void main(String[] args)
    {
-      Menu menu  = new Menu("Fitness Club");
+      Interface menu  = new Interface("Fitness Club");
       menu.display();
    }
 }
