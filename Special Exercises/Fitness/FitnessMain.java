@@ -1,7 +1,7 @@
-// Fitness Exercise, mainActivity
+// Fitness Exercise, main Activity
 // Jan Bogoryja-Zakrzewski, Dat19i
 
-public class MainActivity {
+public class FitnessMain {
 
    public static void main(String[] args)
    {

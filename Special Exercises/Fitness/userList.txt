@@ -6,3 +6,6 @@ Mp24 full CPR12345 true test
 Mp24 full CPR12345 true test2
 MP135 full CPR12345 true test3
 MB135 basic CPR12345 true dave
+MA135 admin CPR12345 false maja
+MA135 admin CPR12345 false maja 2.0
+MA132 a CPR12312 false MAJA 4.0
