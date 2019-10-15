@@ -10,3 +10,4 @@ MF444 full CPR44444 true test4
 MB444 basic CPR44444 false test5
 MF666 full CPR66666 false test6
 EA135 admin CPR12345 test7
+MB640 basic CPR69420 false sanitycheck

@@ -33,7 +33,8 @@ public class Interface{
             case 1:     mainMenu();       break;
             case 2:     showUsers();      break;
             case 3:     searchUsers();    break;
-            case 4:     modifyUser();     break;
+            case 4:     modifyUser(false);break;
+            case 45:    modifyUser(true);break;
             case 5:     addUser();        break;
             case 6:     settingsMenu();   break;
             case 7:     quitMenu();       break;
@@ -42,27 +43,32 @@ public class Interface{
       }
    }
    
+   // Menus:
+   
+   // Screen 1
    public void mainMenu()
    {
-      topBar("Main Menu");
-      
-      System.out.println(" What would you like to do: ");
-      System.out.print(" [1] See all users \n [2] Modify a user \n [3] Add a new user \n [4] Settings \n [5] Quit \n");
-      System.out.print(" >");
-      
-      switch(input().toLowerCase())
-      {
-         case "1":      this.screenNumber = 2;  break;
-         case "2":      this.screenNumber = 4;  break;
-         case "3":      this.screenNumber = 5;  break;
-         case "4":      this.screenNumber = 6;  break;
-         case "5":      this.screenNumber = 7;  break;
-         case "quit":   this.screenNumber = 7;  break;
-         default:       this.screenNumber = 1;  break;
-      }
+		topBar("Main Menu");
+
+		System.out.println(" What would you like to do: ");
+		System.out.print(" [1] See all users \n [2] Search users \n [3] Add a new user \n [4] Modify a user \n [5] Remove a user \n [6] Quit \n");
+		System.out.print(" >");
+
+		switch(input().toLowerCase())
+		{
+			case "1":      this.screenNumber = 2;  break;
+			case "2":      this.screenNumber = 3;  break;
+			case "3":      this.screenNumber = 5;  break;
+			case "4":      this.screenNumber = 4;  break;
+			case "5":      this.screenNumber = 45; break;
+			case "6":      this.screenNumber = 7;  break;
+			case "quit":   this.screenNumber = 7;  break;
+			default:       this.screenNumber = 1;  break;
+		}
       
    }
    
+   // Screen 2
    public void showUsers()
    {
       topBar("Users");
@@ -83,38 +89,104 @@ public class Interface{
       }
    }
    
+   // Screen 3
    public void searchUsers()
    {
-      topBar("Search");
+		topBar("Search");
       
-      System.out.print(" Input User name or CPR number. If you want to return, input \"return\" \n");
-      System.out.print(" >");
-      
-      switch(input().toLowerCase())
-      {
-         case "return": this.screenNumber = 1;  break;
-         case "quit":   this.screenNumber = 1;  break;
-         default:       this.screenNumber = 3;  break;
-      }
+		System.out.print(" Input your search query (a name, CPR, user type etc). If you want to return, input \"return\" \n");
+		System.out.print(" >");
 
-   }
+		String tempInput = input().toLowerCase();
 
-   
-   public void modifyUser()
+		switch(tempInput)
+		{
+   		case "return": this.screenNumber = 1;  break;
+   		case "quit":   this.screenNumber = 1;  break;
+   		default:
+      		clearScreen();
+      		topBar("Search Results \"" + tempInput + "\"");
+      		Backend system = new Backend();
+            system.searchUsers(tempInput);
+      		System.out.println("------------------------------------------------");
+            
+      		System.out.println(" What would you like to do: ");
+      		System.out.print(" [1] Perform another search \n [2] Modify a user \n [3] Delete a user \n [4] return \n");
+      		System.out.print(" >");
+            tempInput = input().toLowerCase();
+            
+      		switch(tempInput)
+      		{
+      			case "1":		this.screenNumber = 3;  break;
+      			case "2":       modifyUser(false);	this.screenNumber = 1;  break;
+      			case "3":       modifyUser(true);	this.screenNumber = 1;  break;
+      			case "4":       this.screenNumber = 1;  break;
+      			case "quit":	this.screenNumber = 7;  break;
+      			case "return":	this.screenNumber = 1;	break;
+      			default:        this.screenNumber = 1;  break;
+      		}
+      		break;
+		}
+
+		}
+
+   // Screen 4
+   public void modifyUser(boolean deleteUser)
    {
-      topBar("Modify user");
+      if(deleteUser)topBar("Delete User"); else topBar("Modify User");
       
       System.out.print(" Input User name or CPR number. If you want to return, input \"return\" \n");
       System.out.print(" >");
       
-      switch(input().toLowerCase())
-      {
-         case "return": this.screenNumber = 1;  break;
-         case "quit":   this.screenNumber = 1;  break;
-         default:       this.screenNumber = 4;  break;
-      }
+      String tempInput = input().toLowerCase();
+      System.out.println("------------------------------------------------");
+
+		switch(tempInput)
+		{
+   		case "return": this.screenNumber = 1;  break;
+   		case "quit":   this.screenNumber = 1;  break;
+   		default:
+      		Backend system = new Backend();
+            
+            boolean repeat = true;
+            
+            while(repeat)
+            {
+            
+               int searchResult = system.searchUsers(tempInput);
+               System.out.println("------------------------------------------------");
+               
+               if(searchResult == 0)
+               {
+                  System.out.println(" No results. Try using a different query");
+         		   System.out.print(" >");
+                  tempInput = input().toLowerCase();
+                  System.out.println("------------------------------------------------");
+                  if(deleteUser) this.screenNumber = 45; else this.screenNumber = 4;
+               }
+               else if(searchResult > 1)
+               {
+                  System.out.println(" Multiple matches. Try using the CPR number");
+         		   System.out.print(" >");
+                  tempInput = input().toLowerCase();
+                  System.out.println("------------------------------------------------");
+                  if(deleteUser) this.screenNumber = 45; else this.screenNumber = 4;
+               }
+               else
+               {
+                  // tempInput is the searchQuery that will have only one match.
+                  // Now I just need to pass it to the backend along with delete? flag and do the magic
+                  // There are probably bugs but it's 1:30am
+                  repeat = false;
+                  System.out.println("all good fam. Press enter to proceed");
+                  input();
+                  this.screenNumber = 1;
+               }
+            }
+            break;
+		}
    }
-   
+   // Screen 5
    public void addUser()
    {
       topBar("New User");
@@ -139,7 +211,8 @@ public class Interface{
 
       }
    }   
-      
+   
+   // Screen 6
    public void settingsMenu()
    {
       topBar("Options");
@@ -158,11 +231,14 @@ public class Interface{
       }
    }
    
+   // Screen 7
    public void quitMenu()
    {
       this.running = false;
       this.screenNumber = 99;
    }
+   
+   // Extra Interface displays
    
    public void topBar(String screenTitle)
    {
@@ -376,5 +452,12 @@ public class Interface{
       
       if(type.equals("admin") || type.equals("instructor")) system.addNewUser(type, cpr, name);   
       else system.addNewUser(type, cpr, paymentStatus, name);
+   }
+   
+   public void searchUser(String searchQuery)
+   {
+      Backend system = new Backend();      
+      system.searchUsers(searchQuery);
+      System.out.println("------------------------------------------------");
    }
 }

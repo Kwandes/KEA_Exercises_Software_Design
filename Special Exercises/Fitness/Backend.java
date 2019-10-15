@@ -61,7 +61,7 @@ public class Backend {
    
    }
    
-   // Member adding
+   // Adding User
    public void addNewUser(String type, String cpr, String paymentStatus, String name)
    {
       System.out.print("adding new user...");
@@ -73,6 +73,53 @@ public class Backend {
            file.close();    
           }
       catch(Exception e){  System.out.println("error: " + e); }
+   }
    
+   // Modifying user
+   public int searchUsers(String searchQuery)
+   {
+      File file = new File(FILE_NAME);
+      int matchCounter = 0;
+      
+      try
+      {
+         file.createNewFile();
+      }
+      catch (IOException e) {}
+      
+      try
+      {
+         Scanner userList = new Scanner(file);
+         
+         while(userList.hasNext())
+         {
+            String userID = userList.next();
+            if(userID.startsWith("E"))
+            {
+               User user = new User(userList.next(), userList.next(), userList.nextLine());
+               if(user.toString().contains(searchQuery))
+               {
+                  System.out.println(">" + user);
+                  matchCounter++;
+               }
+            }
+            else if (userID.startsWith("M"))
+            {
+               User user = new User(userList.next(), userList.next(), userList.next(), userList.nextLine());
+               if((user.toString().toLowerCase()).contains(searchQuery))
+               {
+                  System.out.println(">" + user);
+                  matchCounter++;
+               }
+            }
+         }
+         if(matchCounter == 0) System.out.println("<no results - try another query>");
+         
+      }
+      catch (FileNotFoundException e)
+      {
+         System.out.println("Critcal error - file missing!");
+      }
+      return matchCounter;
    }
 }
