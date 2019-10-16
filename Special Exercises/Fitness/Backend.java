@@ -8,118 +8,107 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList; 
 import java.io.FileWriter;
 
-public class Backend {
+public class Backend{
+
+   public Backend(){}
    
-   String FILE_NAME = "userList.txt";
-   
-   public void displayAllContents()
+   public ArrayList<User> modifyUser(ArrayList<User> userArray, String searchQuery, User modifiedUser)
    {
-      File file = new File(FILE_NAME);
+      System.out.println("Debugging modifyUser()");
       
-      try
+      for(int i = 0; i < userArray.size(); i++)
       {
-         file.createNewFile();
+         if(userArray.get(i).toString().toLowerCase().contains(searchQuery.toLowerCase())) userArray.set(i, modifiedUser);
       }
-      catch (IOException e) {}
+      return userArray;
+   }
+   
+   public ArrayList<User> deleteUser(ArrayList<User> userArray, String searchQuery)
+   {
+      System.out.println("Debugging deleteUser()");
+      
+      for(int i = 0; i < userArray.size(); i++)
+      {
+         if(userArray.get(i).toString().toLowerCase().contains(searchQuery.toLowerCase())) userArray.remove(i);
+      }
+      return userArray;
+   }
+   
+   
+   // File operations
+   public ArrayList<User> readFile(String fileName)
+   {
+      System.out.println("Debugging readFile()");
+      ArrayList<User> userArray = new ArrayList<User>();
+      
+      File file = new File(fileName);
+            
       try
       {
-         Scanner userList = new Scanner(file);
+         Scanner fileContent = new Scanner(file);
          
-         while(userList.hasNext())
+         while(fileContent.hasNext())
          {
-            String userID = userList.next();
-            if(userID.startsWith("E"))
-            {
-               User user = new User(userList.next(), userList.next(), userList.nextLine());
-               System.out.println(user);
-            }
-            else if (userID.startsWith("M"))
-            {
-               User user = new User(userList.next(), userList.next(), userList.next(), userList.nextLine());
-               System.out.println(user);
-            }         
+            String userID = fileContent.next();
+            String userCPR = fileContent.next();
+            String userType = fileContent.next();
+            String userName = fileContent.nextLine();
+            userArray.add(new User(userCPR, userType, userName.replaceFirst(" ", "")));   // Weird bug, it adds a whitespace to the beginning of the name. Faisal halp
          }
       }
-      catch (FileNotFoundException e)
-      {
-         System.out.println("Critcal error - file missing!");
-      }
+      catch (FileNotFoundException e) { System.out.println("Critcal error - file missing!\n" + e);   }
+      
+      return userArray;
    }
    
-   // Employee adding
-   public void addNewUser(String type, String cpr, String name)
+   public void saveToFile(ArrayList<User> userArray, String fileName)
    {
-      System.out.print("adding new user...");
-      String userID = "E" + Character.toUpperCase(type.charAt(0)) + cpr.charAt(3) + cpr.charAt(5) + cpr.charAt(7);
-      String userLine = "\n" + userID + " " + type + " " + cpr + " "  + name;
-      try{    
-           FileWriter file = new FileWriter(FILE_NAME, true);    
-           file.write(userLine);    
-           file.close();    
-          }
-      catch(Exception e){  System.out.println("error: " + e); }
-   
-   }
-   
-   // Adding User
-   public void addNewUser(String type, String cpr, String paymentStatus, String name)
-   {
-      System.out.print("adding new user...");
-      String userID = "M" + Character.toUpperCase(type.charAt(0)) + cpr.charAt(3) + cpr.charAt(5) + cpr.charAt(7);
-      String userLine = "\n" + userID + " " + type + " " + cpr + " " + paymentStatus + " " + name;
-      try{    
-           FileWriter file = new FileWriter(FILE_NAME, true);    
-           file.write(userLine);    
-           file.close();    
-          }
-      catch(Exception e){  System.out.println("error: " + e); }
-   }
-   
-   // Modifying user
-   public int searchUsers(String searchQuery)
-   {
-      File file = new File(FILE_NAME);
-      int matchCounter = 0;
+      System.out.println("Debugging saveToFile()");
       
       try
       {
-         file.createNewFile();
-      }
-      catch (IOException e) {}
-      
-      try
-      {
-         Scanner userList = new Scanner(file);
+         FileWriter file = new FileWriter(fileName);
          
-         while(userList.hasNext())
+         for(int i = 0; i < userArray.size(); i++)
          {
-            String userID = userList.next();
-            if(userID.startsWith("E"))
-            {
-               User user = new User(userList.next(), userList.next(), userList.nextLine());
-               if(user.toString().contains(searchQuery))
-               {
-                  System.out.println(">" + user);
-                  matchCounter++;
-               }
-            }
-            else if (userID.startsWith("M"))
-            {
-               User user = new User(userList.next(), userList.next(), userList.next(), userList.nextLine());
-               if((user.toString().toLowerCase()).contains(searchQuery))
-               {
-                  System.out.println(">" + user);
-                  matchCounter++;
-               }
-            }
+            file.write(userArray.get(i).toStringFileFormat());
          }
-         if(matchCounter == 0) System.out.println("<no results - try another query>");
-         
+         file.close();
       }
-      catch (FileNotFoundException e)
-      {
-         System.out.println("Critcal error - file missing!");
-      }
-      return matchCounter;
+      catch (IOException e) { System.out.println(e); }
    }
+   
+   public void renameFile(String fileName, String newFileName)
+   {
+      System.out.println("Debugging renameFile()");
+      
+      File file = new File(fileName);
+      File newFile = new File(newFileName);
+      
+      try{ file.createNewFile(); }
+      catch (IOException e) { System.out.println(e);  }
+      
+      if (!file.renameTo(newFile))
+      {
+         System.out.println("Renaming went wrong");
+      }
+   }
+   
+   public ArrayList<User> searchArray(ArrayList<User> userArray, String searchQuery)
+   {
+      System.out.println("Debugging SearchArray()");
+      
+      ArrayList<User> userMatches = new ArrayList<User>();
+      
+      searchQuery = searchQuery.toLowerCase();
+      
+      for(int i = 0; i < userArray.size(); i++)
+      {
+         if((userArray.get(i).toString().toLowerCase()).contains(searchQuery.toLowerCase()))
+         {
+            userMatches.add(userArray.get(i));
+         }
+      }
+      return userMatches;
+   } 
 }

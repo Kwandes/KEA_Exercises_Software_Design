@@ -11,8 +11,7 @@ public class User{
    final int BASIC_COST = 199;
    final int FULL_COST = 299;
    
-   int monthlyPayment;  
-   boolean payed;
+   int monthlyPayment;
    
    // Employee Only
    final int ADMIN_HOURLY_WAGE = 23000 / (37 * 4);
@@ -21,47 +20,35 @@ public class User{
    int hourlyWage;      
    int vacationDays;
    
-   
-   public User(String type, String id, String paymentStatus, String name)
-   {
-      
-      setUserType(type);
-      
-      if (type.equals("basic"))  setPayment(BASIC_COST);
-      else  setPayment(FULL_COST);
-      
-      setCPR(id);
-      
-      if (paymentStatus.equals("true")) setStatus(true);
-      else setStatus(false);
-      
-      setName(name);
-   }
-   
-   public User(String type, String id, String name)
+   public User(String id, String type, String name)
    {
       setUserType(type);
-      
-      if(userType.equals("admin"))
-      {
-         setWage(ADMIN_HOURLY_WAGE);
-         setVacation(5);
-      }
-      else
-      {
-         setWage(INSTRUCTOR_HOURLY_WAGE);   
-         setVacation(0);
-      }
-      
       setCPR(id);
       setName(name);
+      
+      switch(type)
+      {
+         case "admin":
+            setWage(ADMIN_HOURLY_WAGE);
+            setVacation(5);
+            break;
+         case "instructor":
+            setWage(INSTRUCTOR_HOURLY_WAGE);   
+            setVacation(0);
+            break;
+         case "basic":
+            setPayment(BASIC_COST);
+            break;
+         case "full":
+            setPayment(FULL_COST);
+            break;
+      }
    }
    
    public User()
    {
       setUserType("basic");
       setPayment(BASIC_COST);
-      setStatus(false);
       setCPR("CPR69420");
    }
    
@@ -72,7 +59,14 @@ public class User{
       int nameLength = this.name.length();
       for (int i = 0; i < (maxNameLength-nameLength); i++)
       {  buffer += " "; };
-      return this.name + buffer + " | " + this.cpr + " | Type: " + this.userType.toUpperCase();
+      return getName() + buffer + " | " + getCPR() + " | Type: " + getUserType().toUpperCase();
+   }
+   
+   public String toStringFileFormat()
+   {
+      String cpr = getCPR();
+      String userID = getUserType().toUpperCase().charAt(0) + "" + getName().charAt(0) + "" +  cpr.charAt(3) + "" + cpr.charAt(5) + "" + cpr.charAt(7);
+      return userID + " " + getCPR() + " " + getUserType() + " " + getName() + "\n";
    }
    
    
@@ -98,11 +92,6 @@ public class User{
    {  this.monthlyPayment = cost;   }
    public int getPayment()
    {  return this.monthlyPayment;   }
-   
-   public void setStatus(boolean status)
-   {  this.payed = status;  }
-   public boolean getStatus()
-   {  return this.payed;  }
    
    public void setWage(int wage)
    {  this.hourlyWage = wage;   }
