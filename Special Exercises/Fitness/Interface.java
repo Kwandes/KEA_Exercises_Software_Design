@@ -1,463 +1,161 @@
 // Fitness Exercise, User Interface setup
 // Jan Bogoryja-Zakrzewski, Dat19i
 
-import java.util.Scanner;
-import java.io.BufferedOutputStream;
-import java.io.OutputStream;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+
+import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;   // for Borders
+
+import java.awt.FlowLayout;
+import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Component;          // for Alignment
+
+import java.awt.Color;              // for Borders
+
+// Image import and display
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import java.io.File;
+import java.io.IOException;
+
+
 
 public class Interface{
 
-   String title;
-   boolean running;
-   int screenNumber;
-   boolean adminPerm;
-   String ADMIN_PASSWORD = "abcDEF123";   // yes, I should pull it from config or DB but KISS
+   int FRAME_SIZE_MULTIPLIER = 6;
+   int FRAME_WIDTH = 160 * FRAME_SIZE_MULTIPLIER;
+   int FRAME_HEIGHT = (FRAME_WIDTH/16) * 9;
+   String FRAME_TITLE = "GUI MK 1.0";
    
-   //Region - Menu navigation
-   //-------------------------------------------------------------
-   public Interface(String appName)
-   {
-      this.title = appName;
-      this.running = true;
-      this.screenNumber  = 1;
-      this.adminPerm = false;
-   }
-   
+   final Color DISCORD_DARK_GREY = new Color(44,47,51);
+   final Color DISCORD_GREY = new Color(54,57,62);
+   final Color DISCORD_BLURPLE = new Color(114,137,218);
+
+   public Interface() {};
+
    public void display()
    {
-      while(running)
-      {
-         clearScreen();
-         switch(screenNumber)
-         {
-            case 1:     mainMenu();       break;
-            case 2:     showUsers();      break;
-            case 3:     searchUsers();    break;
-            case 4:     modifyUser(false);break;
-            case 45:    modifyUser(true);break;
-            case 5:     addUser();        break;
-            case 6:     settingsMenu();   break;
-            case 7:     quitMenu();       break;
-            default:    quitMenu();       break;
-         }
-      }
-   }
-   
-   // Menus:
-   
-   // Screen 1
-   public void mainMenu()
-   {
-		topBar("Main Menu");
-
-		System.out.println(" What would you like to do: ");
-		System.out.print(" [1] See all users \n [2] Search users \n [3] Add a new user \n [4] Modify a user \n [5] Remove a user \n [6] Quit \n");
-		System.out.print(" >");
-
-		switch(input().toLowerCase())
-		{
-			case "1":      this.screenNumber = 2;  break;
-			case "2":      this.screenNumber = 3;  break;
-			case "3":      this.screenNumber = 5;  break;
-			case "4":      this.screenNumber = 4;  break;
-			case "5":      this.screenNumber = 45; break;
-			case "6":      this.screenNumber = 7;  break;
-			case "quit":   this.screenNumber = 7;  break;
-			default:       this.screenNumber = 1;  break;
-		}
+      // Init frame
+      JFrame frame = new JFrame(FRAME_TITLE);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
       
-   }
-   
-   // Screen 2
-   public void showUsers()
-   {
-      topBar("Users");
+      // Main Display panel
+      JPanel panelMain = new JPanel();
       
-      displayAllUsers();
+      GridBagLayout gridbag = new GridBagLayout();
+      GridBagConstraints c = new GridBagConstraints();
+      panelMain.setLayout(gridbag);
       
-      System.out.println(" What would you like to do: ");
-      System.out.print(" [1] Search for a specific user \n [2] Modify a user \n [3] Add a new user \n [4] Main Menu \n");
-      System.out.print(" >");
+      panelMain.setBackground(DISCORD_DARK_GREY);
       
-      switch(input().toLowerCase())
-      {
-         case "1":      this.screenNumber = 3;  break;
-         case "2":      this.screenNumber = 4;  break;
-         case "3":      this.screenNumber = 5;  break;
-         case "4":      this.screenNumber = 1;  break;
-         default:       this.screenNumber = 2;  break;
-      }
-   }
-   
-   // Screen 3
-   public void searchUsers()
-   {
-		topBar("Search");
-      
-		System.out.print(" Input your search query (a name, CPR, user type etc). If you want to return, input \"return\" \n");
-		System.out.print(" >");
-
-		String tempInput = input().toLowerCase();
-
-		switch(tempInput)
-		{
-   		case "return": this.screenNumber = 1;  break;
-   		case "quit":   this.screenNumber = 1;  break;
-   		default:
-      		clearScreen();
-      		topBar("Search Results \"" + tempInput + "\"");
-      		Backend system = new Backend();
-            system.searchUsers(tempInput);
-      		System.out.println("------------------------------------------------");
+         // Menu section
+         JPanel panelMenu = new JPanel();
+         panelMenu.setLayout(new BoxLayout(panelMenu, BoxLayout.Y_AXIS));
+         panelMenu.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+         panelMenu.setBackground(DISCORD_GREY);
+         
+            // add title panel
+            JPanel panelTitle = new JPanel();
+            panelTitle.setLayout(new FlowLayout());
+            panelTitle.setBackground(DISCORD_GREY);
             
-      		System.out.println(" What would you like to do: ");
-      		System.out.print(" [1] Perform another search \n [2] Modify a user \n [3] Delete a user \n [4] return \n");
-      		System.out.print(" >");
-            tempInput = input().toLowerCase();
-            
-      		switch(tempInput)
-      		{
-      			case "1":		this.screenNumber = 3;  break;
-      			case "2":       modifyUser(false);	this.screenNumber = 1;  break;
-      			case "3":       modifyUser(true);	this.screenNumber = 1;  break;
-      			case "4":       this.screenNumber = 1;  break;
-      			case "quit":	this.screenNumber = 7;  break;
-      			case "return":	this.screenNumber = 1;	break;
-      			default:        this.screenNumber = 1;  break;
-      		}
-      		break;
-		}
-
-		}
-
-   // Screen 4
-   public void modifyUser(boolean deleteUser)
-   {
-      if(deleteUser)topBar("Delete User"); else topBar("Modify User");
-      
-      System.out.print(" Input User name or CPR number. If you want to return, input \"return\" \n");
-      System.out.print(" >");
-      
-      String tempInput = input().toLowerCase();
-      System.out.println("------------------------------------------------");
-
-		switch(tempInput)
-		{
-   		case "return": this.screenNumber = 1;  break;
-   		case "quit":   this.screenNumber = 1;  break;
-   		default:
-      		Backend system = new Backend();
-            
-            boolean repeat = true;
-            
-            while(repeat)
-            {
-            
-               int searchResult = system.searchUsers(tempInput);
-               System.out.println("------------------------------------------------");
+               JLabel labelTitle = new JLabel("System Management");
+               labelTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+               labelTitle.setForeground(Color.white);
                
-               if(searchResult == 0)
-               {
-                  System.out.println(" No results. Try using a different query");
-         		   System.out.print(" >");
-                  tempInput = input().toLowerCase();
-                  System.out.println("------------------------------------------------");
-                  if(deleteUser) this.screenNumber = 45; else this.screenNumber = 4;
-               }
-               else if(searchResult > 1)
-               {
-                  System.out.println(" Multiple matches. Try using the CPR number");
-         		   System.out.print(" >");
-                  tempInput = input().toLowerCase();
-                  System.out.println("------------------------------------------------");
-                  if(deleteUser) this.screenNumber = 45; else this.screenNumber = 4;
-               }
-               else
-               {
-                  // tempInput is the searchQuery that will have only one match.
-                  // Now I just need to pass it to the backend along with delete? flag and do the magic
-                  // There are probably bugs but it's 1:30am
-                  repeat = false;
-                  System.out.println("all good fam. Press enter to proceed");
-                  input();
-                  this.screenNumber = 1;
-               }
-            }
-            break;
-		}
-   }
-   // Screen 5
-   public void addUser()
-   {
-      topBar("New User");
-      
-      if ( !adminLogon()) this.screenNumber = 1;
-      else
-      {
-         System.out.print(" What is the name of the user ? If you want to return, type \"return\" \n");
-         System.out.print(" >");
-         
-         String tempInput = input().toLowerCase();
-         
-         switch(tempInput)
-         {
-            case "return": this.screenNumber = 1;  break;
-            case "quit":   this.screenNumber = 1;  break;
-            default:       
-               this.screenNumber = 1;
-               addNewUser(tempInput);
-               break;
-         }
-
-      }
-   }   
-   
-   // Screen 6
-   public void settingsMenu()
-   {
-      topBar("Options");
-      
-      System.out.print("Here are your options: \n");
-      System.out.print(" - Suck a dick \n");
-      System.out.print(" [1] Main Menu \n");
-      System.out.print(" >");
-      
-      switch(input().toLowerCase())
-      {
-         case "1":            this.screenNumber = 1;  break;
-         case "main":    this.screenNumber = 1;  break;
-         case "quit":         this.screenNumber = 1;  break;
-         default:             this.screenNumber = 6;  break;
-      }
-   }
-   
-   // Screen 7
-   public void quitMenu()
-   {
-      this.running = false;
-      this.screenNumber = 99;
-   }
-   
-   // Extra Interface displays
-   
-   public void topBar(String screenTitle)
-   {
-      System.out.println(this.title + " - " + screenTitle);
-      System.out.println("------------------------------------------------");
-   }
-   
-   public String input()
-   {
-         Scanner console = new Scanner(System.in);
-         return console.nextLine();      
-   }
-   
-   public void clearScreen()
-   {  
-      System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");      // 30 newlines
-   }
-   //-------------------------------------------------------------
-   
-   
-   
-   //Region - user logic
-   //-------------------------------------------------------------
-   public void setPerms(boolean perms)
-   {
-      this.adminPerm = perms;
-   }
-   
-   public boolean checkPerms()
-   {
-      return this.adminPerm;
-   }
-   
-   public boolean adminLogon()
-   {
-      if(checkPerms()) return true;
-      
-      System.out.println("you need admin permissions to perform this action.");
-      System.out.print("password:>");
-      if ( input().equals(ADMIN_PASSWORD))
-      {
-         setPerms(true);
-         System.out.println("password is correct. Hello Admin");
-         return true;
-      }
-      else 
-      {
-         System.out.println("Incorrect password. ACCESS DENIED");
-         try {Thread.sleep(2000);}
-         catch (InterruptedException e) {};
-         clearScreen();
-         return false;
-      }
-   }
-   
-   public void displayAllUsers()
-   {
-      Backend system = new Backend();
-      system.displayAllContents();
-      System.out.println("------------------------------------------------");
-   }
-   
-   public void addNewUser(String name)
-   {
-      Backend system = new Backend();
-      
-      String type = "basic";
-      String cpr = "CPR69420";
-      String paymentStatus = "false";
-      
-      boolean repeat = true;
-      
-      // CPR
-      System.out.println("What is their CPR? Remember, 5 digits");
-      
-      while(repeat)
-      {
-         
-         System.out.print(" >");
-         cpr = input();
-         if (cpr.length() == 8) repeat = false;
-         else if (cpr.length() == 5) 
-         {
-            cpr = "CPR" + cpr;
-            repeat = false;
-         }
-         else
-         {
-            System.out.println("The CPR is wrong. Please input correct CPR");      
-         }
-      }
-      repeat = true;
-      
-      // Type
-      System.out.println("What is the type of the user:"
-                           + "\n[1]an employee"
-                           + "\n[2]a member");
-      System.out.print(" >");
-      type = input().toLowerCase();
-      System.out.println("------------------------------------------------");
-      
-      while(repeat)
-      {
-         if(type.equals("employee") || type.equals("e") || type.equals("1"))
-         {
-            System.out.println("What is their position:"
-                                 + "\n[1]an admin"
-                                 + "\n[2]a Instructor");
-            System.out.print(" >");
-            
-            type = input().toLowerCase();
-            
-            System.out.println("------------------------------------------------");
-            while(repeat)
-            {
-               if( type.equals("admin") || type.equals("a") || type.equals("1"))
-               {
-                  type = "admin";
-                  repeat = false;
-               }
-               else if ( type.equals("instructor") || type.equals("i") || type.equals("2"))
-               {
-                  type = "instructor";
-                  repeat = false;
-               }
-               else
-               {
-                  System.out.println("Incorrect type. Please use either admin or instructor!");
-                  System.out.print(" >");
-                  type = input().toLowerCase();
-                  System.out.println("------------------------------------------------");
-               }
-            }
-         }
-         
-         
-         else if ( type.equals("member") || type.equals("m") || type.equals("2"))
-         {
-            System.out.println("What is their membership type:"
-                                 + "\n[1]basic"
-                                 + "\n[2]full");
-            System.out.print(" >");
-            System.out.println("------------------------------------------------");
-            
-            type = input().toLowerCase();
-            while(repeat)
-            {
-               System.out.println("DEBUGGING <userType - member>");
+            panelTitle.add(labelTitle);
                
-               if( type.equals("basic") || type.equals("b") || type.equals("1"))
-               {
-                  type = "basic";
-                  repeat = false;
-               }
-               else if ( type.equals("full") || type.equals("f") || type.equals("2"))
-               {
-                  type = "full";
-                  repeat = false;
-               }
-               else
-               {
-                  System.out.println("Incorrect type. Please use either basic or full!");
-                  System.out.print(" >");
-                  type = input().toLowerCase();
-                  System.out.println("------------------------------------------------");
-               }
-            }
+         panelMenu.add(panelTitle);
             
-            // Payed?
-            System.out.println("Did they pay for their membership:"
-                                 + "\n[1]Yes"
-                                 + "\n[2]No");
-            System.out.print(" >");
-            System.out.println("------------------------------------------------");
+            // Menu Options panel
+            JPanel panelMenuOptions = new JPanel();
+            panelMenuOptions.setLayout(new BoxLayout(panelMenuOptions, BoxLayout.Y_AXIS));
+            panelMenuOptions.setBackground(DISCORD_GREY);
             
-            paymentStatus = input().toLowerCase();
+               JButton btnOption1 = new JButton("Search Users");
+               btnOption1.setAlignmentX(Component.CENTER_ALIGNMENT);
+               btnOption1.setForeground(Color.white);
+               btnOption1.setBackground(DISCORD_DARK_GREY);
+               
+            panelMenuOptions.add(btnOption1);
+               
+               JButton btnOption2 = new JButton("Add Users");
+               btnOption2.setAlignmentX(Component.CENTER_ALIGNMENT);
+               btnOption2.setForeground(Color.white);
+               btnOption2.setBackground(DISCORD_DARK_GREY);
+               
+            panelMenuOptions.add(btnOption2);
+               
+               JButton btnOption3 = new JButton("Modify Users");
+               btnOption3.setAlignmentX(Component.CENTER_ALIGNMENT);
+               btnOption3.setForeground(Color.white);
+               btnOption3.setBackground(DISCORD_DARK_GREY);
+               
+            panelMenuOptions.add(btnOption3);
             
-            repeat = true;
+         panelMenu.add(panelMenuOptions);
             
-            while(repeat)
-            {
-               if( paymentStatus.equals("yes") || paymentStatus.equals("y") || paymentStatus.equals("1"))
-               {
-                  paymentStatus = "true";
-                  repeat = false;
-               }
-               else if ( paymentStatus.equals("no") || paymentStatus.equals("n") || paymentStatus.equals("2"))
-               {
-                  paymentStatus = "false";
-                  repeat = false;
-               }
-               else
-               {
-                  System.out.println("Incorrect type. Please use either yes or no!");
-                  System.out.print(" >");
-                  paymentStatus = input().toLowerCase();
-                  System.out.println("------------------------------------------------");
-               }
-            }
-         }
-         else
-         {
-            System.out.println("Incorrect type. Please use either employee or member");
-            System.out.print(" >");
-            type = input().toLowerCase();
-            System.out.println("------------------------------------------------");
-         }
+            // add quit panel
+            JPanel panelQuit = new JPanel();
+            panelQuit.setLayout(new FlowLayout());
+            panelQuit.setBackground(DISCORD_GREY);
+            
+               JButton btnQuit = new JButton("YEET OUT");
+               btnQuit.setAlignmentX(Component.CENTER_ALIGNMENT);
+               btnQuit.setForeground(Color.white);
+               btnQuit.setBackground(DISCORD_DARK_GREY);
+               
+            panelQuit.add(btnQuit);
+               
+         panelMenu.add(panelQuit);
       
-      }
-      repeat = true;
+      c.fill = GridBagConstraints.BOTH;
+      //c.weightx = 0.1;
+      c.weighty = 0.5;
+      c.anchor = GridBagConstraints.LINE_START;
+      c.gridx = 0;
+      c.gridy = 0;
+      c.weightx = 0.3;
+      c.anchor = c.EAST;     
+      panelMain.add(panelMenu, c);
+            
+            
+         // Content section
+         JPanel panelContent = new JPanel();
+         panelContent.setLayout(new BorderLayout());
+         panelContent.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+         panelContent.setBackground(DISCORD_GREY);
+         
+            JLabel labelContent = new JLabel("Content");
+            labelContent.setAlignmentX(Component.CENTER_ALIGNMENT);
+            labelContent.setForeground(Color.white);
+            
+         panelContent.add(labelContent, BorderLayout.NORTH);
+            
+            try{
+            BufferedImage imgDefaultContent = ImageIO.read(new File("defaultContentImage.png"));
+            JLabel labelDefaultImage = new JLabel(new ImageIcon(imgDefaultContent));
+            panelContent.add(labelDefaultImage, BorderLayout.CENTER);
+            }
+            catch (IOException e) {}
+         
+      c.ipady = 0;
+      c.fill = GridBagConstraints.BOTH;
+      //c.weighty = 0.5;
+      c.weightx = 1;
+      c.gridx = 1;
+      c.gridy = 0;
+      panelMain.add(panelContent, c);
       
-      if(type.equals("admin") || type.equals("instructor")) system.addNewUser(type, cpr, name);   
-      else system.addNewUser(type, cpr, paymentStatus, name);
-   }
-   
-   public void searchUser(String searchQuery)
-   {
-      Backend system = new Backend();      
-      system.searchUsers(searchQuery);
-      System.out.println("------------------------------------------------");
+      frame.add(panelMain);
+      frame.setVisible(true);
+      
    }
 }

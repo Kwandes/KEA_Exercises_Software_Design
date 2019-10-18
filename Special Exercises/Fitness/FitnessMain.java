@@ -10,8 +10,18 @@ public class FitnessMain {
       //Interface menu  = new Interface("Fitness Club");
       //menu.display();
       
+      // GUI
+      Interface gui = new Interface();
+      
+      gui.display();
+      
+      // GUI testing
+      //GUI gui = new GUI();
+      
+      //gui.display();
+      
       // a set of tests of all backend features. Creates multiple files.
-      testing();
+      //testing();
    }
    
    public static void testing()
