@@ -28,14 +28,20 @@ import java.io.IOException;
 
 public class Interface{
 
-   int FRAME_SIZE_MULTIPLIER = 6;
+   int FRAME_SIZE_MULTIPLIER = 8;
    int FRAME_WIDTH = 160 * FRAME_SIZE_MULTIPLIER;
    int FRAME_HEIGHT = (FRAME_WIDTH/16) * 9;
    String FRAME_TITLE = "GUI MK 1.0";
    
    final Color DISCORD_DARK_GREY = new Color(44,47,51);
    final Color DISCORD_GREY = new Color(54,57,62);
+   final Color DISCORD_LIGHT_GREY = new Color(153,170,181);
    final Color DISCORD_BLURPLE = new Color(114,137,218);
+   
+   Color backgroundColor = DISCORD_GREY;
+   Color foregroundColor = DISCORD_DARK_GREY;
+   Color textColor = Color.WHITE;
+   
 
    public Interface() {};
 
@@ -46,6 +52,10 @@ public class Interface{
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
       
+      // Color Theme
+      setWhiteTheme(false);
+      
+      
       // Main Display panel
       JPanel panelMain = new JPanel();
       
@@ -53,74 +63,77 @@ public class Interface{
       GridBagConstraints c = new GridBagConstraints();
       panelMain.setLayout(gridbag);
       
-      panelMain.setBackground(DISCORD_DARK_GREY);
+      panelMain.setBackground(foregroundColor);
       
          // Menu section
          JPanel panelMenu = new JPanel();
-         panelMenu.setLayout(new BoxLayout(panelMenu, BoxLayout.Y_AXIS));
+         panelMenu.setLayout(new GridBagLayout());
          panelMenu.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-         panelMenu.setBackground(DISCORD_GREY);
+         panelMenu.setBackground(backgroundColor);
          
             // add title panel
             JPanel panelTitle = new JPanel();
-            panelTitle.setLayout(new FlowLayout());
-            panelTitle.setBackground(DISCORD_GREY);
+            panelTitle.setLayout(new GridBagLayout());
+            panelTitle.setBackground(backgroundColor);
             
-               JLabel labelTitle = new JLabel("System Management");
-               labelTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-               labelTitle.setForeground(Color.white);
+            panelTitle.add(createLabel("System Management", textColor), c);
                
-            panelTitle.add(labelTitle);
-               
-         panelMenu.add(panelTitle);
+         c.fill = GridBagConstraints.HORIZONTAL;
+         c.weightx = 1.0;
+         c.ipady = FRAME_HEIGHT / 6;
+         c.gridy = 0;
+         c.anchor = GridBagConstraints.NORTH;
+         c.weighty = 1.0;
+         panelMenu.add(panelTitle, c);
             
             // Menu Options panel
             JPanel panelMenuOptions = new JPanel();
-            panelMenuOptions.setLayout(new BoxLayout(panelMenuOptions, BoxLayout.Y_AXIS));
-            panelMenuOptions.setBackground(DISCORD_GREY);
+            panelMenuOptions.setLayout(new GridBagLayout());
+            panelMenuOptions.setBackground(backgroundColor);
             
-               JButton btnOption1 = new JButton("Search Users");
-               btnOption1.setAlignmentX(Component.CENTER_ALIGNMENT);
-               btnOption1.setForeground(Color.white);
-               btnOption1.setBackground(DISCORD_DARK_GREY);
+            // layout for menuOptions buttons
+            c.ipady = (FRAME_HEIGHT/3)/3;
+            c.weightx = 1.0;
+            c.weighty = 0.0;
+            c.fill = GridBagConstraints.HORIZONTAL;
                
-            panelMenuOptions.add(btnOption1);
+            c.gridy = 1;
+            panelMenuOptions.add(createButton("Search Users", foregroundColor, textColor), c);
                
-               JButton btnOption2 = new JButton("Add Users");
-               btnOption2.setAlignmentX(Component.CENTER_ALIGNMENT);
-               btnOption2.setForeground(Color.white);
-               btnOption2.setBackground(DISCORD_DARK_GREY);
+            c.gridy = 2;
+            panelMenuOptions.add(createButton("Add Users", foregroundColor, textColor), c);
                
-            panelMenuOptions.add(btnOption2);
-               
-               JButton btnOption3 = new JButton("Modify Users");
-               btnOption3.setAlignmentX(Component.CENTER_ALIGNMENT);
-               btnOption3.setForeground(Color.white);
-               btnOption3.setBackground(DISCORD_DARK_GREY);
-               
-            panelMenuOptions.add(btnOption3);
-            
-         panelMenu.add(panelMenuOptions);
+            c.gridy = 3;
+            panelMenuOptions.add(createButton("Modify Users", foregroundColor, textColor), c);
+         
+         c.ipady = 0;
+         c.gridy = 1;
+         c.anchor = GridBagConstraints.CENTER;
+         panelMenu.add(panelMenuOptions, c);
             
             // add quit panel
             JPanel panelQuit = new JPanel();
-            panelQuit.setLayout(new FlowLayout());
-            panelQuit.setBackground(DISCORD_GREY);
+            panelQuit.setLayout(new GridBagLayout());
+            panelQuit.setBackground(backgroundColor);
+            panelQuit.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
             
-               JButton btnQuit = new JButton("YEET OUT");
-               btnQuit.setAlignmentX(Component.CENTER_ALIGNMENT);
-               btnQuit.setForeground(Color.white);
-               btnQuit.setBackground(DISCORD_DARK_GREY);
+            c.ipady = FRAME_HEIGHT / 6;
+            c.weightx = 1.0;
+            c.fill  = GridBagConstraints.HORIZONTAL;
+            panelQuit.add(createButton("YEET OUT", foregroundColor, textColor), c);
                
-            panelQuit.add(btnQuit);
-               
-         panelMenu.add(panelQuit);
+         
+         c.ipady = 0;
+         c.gridy = 3;
+         c.fill = GridBagConstraints.HORIZONTAL;
+         c.weightx = 1.0;
+         c.anchor = GridBagConstraints.SOUTH;
+         c.weighty = 1.0;
+         panelMenu.add(panelQuit, c);
       
       c.fill = GridBagConstraints.BOTH;
-      //c.weightx = 0.1;
       c.weighty = 0.5;
       c.anchor = GridBagConstraints.LINE_START;
-      c.gridx = 0;
       c.gridy = 0;
       c.weightx = 0.3;
       c.anchor = c.EAST;     
@@ -131,13 +144,9 @@ public class Interface{
          JPanel panelContent = new JPanel();
          panelContent.setLayout(new BorderLayout());
          panelContent.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-         panelContent.setBackground(DISCORD_GREY);
-         
-            JLabel labelContent = new JLabel("Content");
-            labelContent.setAlignmentX(Component.CENTER_ALIGNMENT);
-            labelContent.setForeground(Color.white);
+         panelContent.setBackground(backgroundColor);
             
-         panelContent.add(labelContent, BorderLayout.NORTH);
+         panelContent.add(createLabel("Content", textColor), BorderLayout.NORTH);
             
             try{
             BufferedImage imgDefaultContent = ImageIO.read(new File("defaultContentImage.png"));
@@ -148,8 +157,7 @@ public class Interface{
          
       c.ipady = 0;
       c.fill = GridBagConstraints.BOTH;
-      //c.weighty = 0.5;
-      c.weightx = 1;
+      c.weightx = 1.0;
       c.gridx = 1;
       c.gridy = 0;
       panelMain.add(panelContent, c);
@@ -157,5 +165,41 @@ public class Interface{
       frame.add(panelMain);
       frame.setVisible(true);
       
+   }
+   
+   public JButton createButton(String btnText, Color backgroundColor, Color textColor)
+   {
+      JButton button = new JButton(btnText);
+      button.setAlignmentX(Component.CENTER_ALIGNMENT);
+      button.setBackground(backgroundColor);
+      button.setForeground(textColor);
+      
+      return button;
+   }
+   
+   public JLabel createLabel(String labelText, Color textColor)
+   {
+      JLabel label = new JLabel(labelText);
+      label.setAlignmentX(Component.CENTER_ALIGNMENT);
+      label.setForeground(textColor);
+      return label;
+   }
+   
+   public void setWhiteTheme(boolean doYouReallyWantLightTheme)
+   {
+      if (doYouReallyWantLightTheme)
+      {
+         // Light Theme
+         backgroundColor = Color.WHITE;
+         foregroundColor = DISCORD_LIGHT_GREY;
+         textColor = DISCORD_GREY;   
+      }
+      else
+      {
+         // Dark Theme - the better one
+         backgroundColor = DISCORD_GREY;
+         foregroundColor = DISCORD_DARK_GREY;
+         textColor = Color.WHITE;
+      }
    }
 }
