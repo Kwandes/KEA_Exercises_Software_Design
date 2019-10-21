@@ -24,6 +24,9 @@ import javax.swing.ImageIcon;
 import java.io.File;
 import java.io.IOException;
 
+// Interaction / Logic
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class Interface{
@@ -51,12 +54,19 @@ public class Interface{
       JFrame frame = new JFrame(FRAME_TITLE);
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+      frame.setUndecorated(true);
       
       // Color Theme
       setWhiteTheme(false);
       
+      frame.add(createMainPanel());
       
-      // Main Display panel
+      frame.setVisible(true);
+   }
+   
+   // Main Display panel
+   public JPanel createMainPanel()
+   {
       JPanel panelMain = new JPanel();
       
       GridBagLayout gridbag = new GridBagLayout();
@@ -75,8 +85,12 @@ public class Interface{
             JPanel panelTitle = new JPanel();
             panelTitle.setLayout(new GridBagLayout());
             panelTitle.setBackground(backgroundColor);
-            
-            panelTitle.add(createLabel("System Management", textColor), c);
+               
+               JLabel labelTitle = new JLabel("System Management");
+               labelTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+               labelTitle.setForeground(textColor);
+               
+            panelTitle.add(labelTitle, c);
                
          c.fill = GridBagConstraints.HORIZONTAL;
          c.weightx = 1.0;
@@ -97,14 +111,26 @@ public class Interface{
             c.weighty = 0.0;
             c.fill = GridBagConstraints.HORIZONTAL;
                
+               JButton btnSearchUsers = new JButton("Search Users");
+               setupButton(btnSearchUsers, foregroundColor, textColor);
+               btnSearchUsers.setActionCommand("searchUsers");
+               
             c.gridy = 1;
-            panelMenuOptions.add(createButton("Search Users", foregroundColor, textColor), c);
+            panelMenuOptions.add(btnSearchUsers, c);
+                  
+               JButton btnAddUser = new JButton("Add User");
+               setupButton(btnAddUser, foregroundColor, textColor);
+               btnAddUser.setActionCommand("addUser");
                
             c.gridy = 2;
-            panelMenuOptions.add(createButton("Add Users", foregroundColor, textColor), c);
+            panelMenuOptions.add(btnAddUser, c);
+                  
+               JButton btnModifyUser = new JButton("Modify User");
+               setupButton(btnModifyUser, foregroundColor, textColor);
+               btnModifyUser.setActionCommand("modifyUser");
                
             c.gridy = 3;
-            panelMenuOptions.add(createButton("Modify Users", foregroundColor, textColor), c);
+            panelMenuOptions.add(btnModifyUser, c);
          
          c.ipady = 0;
          c.gridy = 1;
@@ -120,7 +146,12 @@ public class Interface{
             c.ipady = FRAME_HEIGHT / 6;
             c.weightx = 1.0;
             c.fill  = GridBagConstraints.HORIZONTAL;
-            panelQuit.add(createButton("YEET OUT", foregroundColor, textColor), c);
+               
+               JButton btnQuit = new JButton("YEET OUT");
+               setupButton(btnQuit, foregroundColor, textColor);
+               btnQuit.setActionCommand("YEET");
+            
+            panelQuit.add(btnQuit, c);
                
          
          c.ipady = 0;
@@ -146,7 +177,11 @@ public class Interface{
          panelContent.setBorder(BorderFactory.createLineBorder(Color.BLACK));
          panelContent.setBackground(backgroundColor);
             
-         panelContent.add(createLabel("Content", textColor), BorderLayout.NORTH);
+               JLabel labelContent = new JLabel("Content");
+               labelContent.setAlignmentX(Component.CENTER_ALIGNMENT);
+               labelContent.setForeground(textColor);
+               
+         panelContent.add(labelContent, BorderLayout.NORTH);
             
             try{
             BufferedImage imgDefaultContent = ImageIO.read(new File("defaultContentImage.png"));
@@ -162,27 +197,17 @@ public class Interface{
       c.gridy = 0;
       panelMain.add(panelContent, c);
       
-      frame.add(panelMain);
-      frame.setVisible(true);
-      
+      return panelMain;
    }
    
-   public JButton createButton(String btnText, Color backgroundColor, Color textColor)
+   // Sets up basic stuff for buttons
+   public void setupButton(JButton button, Color backgroundColor, Color textColor)
    {
-      JButton button = new JButton(btnText);
       button.setAlignmentX(Component.CENTER_ALIGNMENT);
       button.setBackground(backgroundColor);
       button.setForeground(textColor);
       
-      return button;
-   }
-   
-   public JLabel createLabel(String labelText, Color textColor)
-   {
-      JLabel label = new JLabel(labelText);
-      label.setAlignmentX(Component.CENTER_ALIGNMENT);
-      label.setForeground(textColor);
-      return label;
+      button.addActionListener(new ButtonClickListener());
    }
    
    public void setWhiteTheme(boolean doYouReallyWantLightTheme)
@@ -201,5 +226,36 @@ public class Interface{
          foregroundColor = DISCORD_DARK_GREY;
          textColor = Color.WHITE;
       }
+   }
+   
+   // Button click events
+   private class ButtonClickListener implements ActionListener{
+      public void actionPerformed(ActionEvent e) {
+         String command = e.getActionCommand();  
+         
+         switch (command)
+         {
+            case "searchUsers":
+               System.out.println("searching...");
+               setWhiteTheme(true);
+               repaintFrame();
+               break;
+            case "modifyUser":
+               System.out.println("modifying...");
+               break;
+            case "addUser":
+               System.out.println("adding...");
+               break;
+            case "YEET":
+               System.out.println("YEEEEEEEEEEEEEEEEEEEEEEEEET");
+               System.exit(0);
+               break;
+         }
+      }		
+   }
+   
+   public void repaintFrame()
+   {
+      //panelMain.revalidate();
    }
 }
