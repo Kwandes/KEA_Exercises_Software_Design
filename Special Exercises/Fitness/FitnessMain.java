@@ -3,25 +3,36 @@
 
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 public class FitnessMain {
+
+   private static final boolean SHOW_GUI = true;
+   private static final boolean SHOW_CONSOLE = true;
+   private static final boolean RUN_UNIT_TESTS = false;
+   
+   private static final int FRAME_SIZE_MULTIPLIER = 8;
+   private static final int FRAME_WIDTH = 160 * FRAME_SIZE_MULTIPLIER;
+   private static final int FRAME_HEIGHT = (FRAME_WIDTH/16) * 9;
+   private static final String FRAME_TITLE = "GUI MK 1.0";
 
    public static void main(String[] args)
    {
-      //Interface menu  = new Interface("Fitness Club");
-      //menu.display();
+   
+      if(RUN_UNIT_TESTS) testing();
       
-      // GUI
-      Interface gui = new Interface();
-      
-      gui.display();
-      
-      // GUI testing
-      //GUI gui = new GUI();
-      
-      //gui.display();
-      
-      // a set of tests of all backend features. Creates multiple files.
-      //testing();
+      if(SHOW_GUI)
+      {
+         SwingUtilities.invokeLater(new Runnable()
+         {
+            public void run()
+            {
+            new MainFrame(FRAME_TITLE, FRAME_WIDTH, FRAME_HEIGHT);         
+            }
+         });
+         System.out.println(">>>Frame created");
+      }
    }
    
    public static void testing()
