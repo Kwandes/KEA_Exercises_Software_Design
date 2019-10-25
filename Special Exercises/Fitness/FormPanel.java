@@ -16,15 +16,15 @@ import javax.swing.border.Border;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class FormPanel extends JPanel {
+public class Menu extends JPanel {
 
-   private JLabel nameLabel;
-   private JLabel occupationLabel;
-   private JTextField nameField;
-   private JTextField occupationField;
-   private JButton btnOk;
+   private JLabel labelTitle;
+   private JButton btnOption1;
+   private JButton btnOption2;
+   private JButton btnOption3;
+   private JButton btnQuit;
    
-   private FormListener formListener;
+   private buttonListener buttonListener;
 
    public FormPanel()
    {

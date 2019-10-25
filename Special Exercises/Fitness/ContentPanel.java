@@ -4,11 +4,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 
-public class TextPanel extends JPanel {
+public class ContentPanel extends JPanel {
 
    private JTextArea textArea;
 
-   public TextPanel()
+   public ContentPanel()
    {
       textArea = new JTextArea();
       
