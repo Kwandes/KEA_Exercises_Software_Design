@@ -25,9 +25,11 @@ public class MainFrame extends JFrame{
    final Color DISCORD_LIGHT_GREY = new Color(153,170,181);
    final Color DISCORD_BLURPLE = new Color(114,137,218);
    
-   Color backgroundColor = DISCORD_GREY;
-   Color foregroundColor = DISCORD_DARK_GREY;
-   Color textColor = Color.WHITE;
+   Color backgroundColor;
+   Color foregroundColor;
+   Color textColor;
+   
+   boolean whiteTheme = false;;
 
    public MainFrame()
    {
@@ -45,6 +47,9 @@ public class MainFrame extends JFrame{
       
       setLayout(new GridBagLayout());
       GridBagConstraints gc = new GridBagConstraints();
+      
+      setWhiteTheme(whiteTheme);
+      this.setUndecorated(true);
       
       menuPanel = new MenuPanel(backgroundColor, foregroundColor, textColor);
       contentPanel = new ContentPanel();
@@ -70,7 +75,11 @@ public class MainFrame extends JFrame{
       // Button click listener
       menuPanel.setStringListener(new StringListener() {
          public void textEmitted(String text)
-         {  
+         {
+            if(text.contains("changeTheme"))
+            {
+               setWhiteTheme(!whiteTheme);
+            }
             contentPanel.appendText(text);
          }
       });
@@ -78,6 +87,29 @@ public class MainFrame extends JFrame{
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setVisible(true);
    }
-
-
+   
+   public void setWhiteTheme(boolean areYouSure)
+   {
+      if(areYouSure)
+      {
+         backgroundColor = Color.WHITE;
+         foregroundColor = DISCORD_LIGHT_GREY;
+         textColor = DISCORD_GREY;
+         whiteTheme = true;
+         System.out.println(">>>Setting theme to LIGHT. A mistake");
+      }
+      else
+      {
+         backgroundColor = DISCORD_GREY;
+         foregroundColor = DISCORD_DARK_GREY;
+         textColor = Color.WHITE;
+         whiteTheme = false;
+         System.out.println(">>>Setting theme to dark");
+      }
+      if(menuPanel != null)
+      {
+         menuPanel.setTheme(backgroundColor, foregroundColor, textColor);
+         contentPanel.setTheme(backgroundColor, foregroundColor, textColor);
+      }
+   }
 }

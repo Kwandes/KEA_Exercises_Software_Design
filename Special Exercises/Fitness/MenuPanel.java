@@ -42,7 +42,7 @@ public class MenuPanel extends JPanel implements ActionListener {
       
       btnOption1 = new JButton("Option 1");
       btnOption2 = new JButton("Option 2");
-      btnOption3 = new JButton("Option 3");
+      btnOption3 = new JButton("Change Theme");
       btnQuit    = new JButton("YEET OUT");
       
       btnOption1.addActionListener(this);
@@ -50,19 +50,7 @@ public class MenuPanel extends JPanel implements ActionListener {
       btnOption3.addActionListener(this);
       btnQuit.addActionListener(this);
       
-      /////////////// COLOR THEME ////////////////// 
-      setBackground(backgroundColor);
-      
-      labelTitle.setForeground(textColor);
-      
-      btnOption1.setBackground(foregroundColor);
-      btnOption1.setForeground(textColor);
-      btnOption2.setBackground(foregroundColor);
-      btnOption2.setForeground(textColor);
-      btnOption3.setBackground(foregroundColor);
-      btnOption3.setForeground(textColor);
-      btnQuit.setBackground(foregroundColor);
-      btnQuit.setForeground(textColor);
+      setTheme(backgroundColor, foregroundColor, textColor);
       
       setLayout(new GridBagLayout());
       GridBagConstraints gc = new GridBagConstraints();
@@ -107,6 +95,22 @@ public class MenuPanel extends JPanel implements ActionListener {
       add(btnQuit, gc);
    }
    
+   public void setTheme(Color backgroundColor, Color foregroundColor, Color textColor)
+   {
+      this.setBackground(backgroundColor);
+      
+      labelTitle.setForeground(textColor);
+      
+      btnOption1.setBackground(foregroundColor);
+      btnOption1.setForeground(textColor);
+      btnOption2.setBackground(foregroundColor);
+      btnOption2.setForeground(textColor);
+      btnOption3.setBackground(foregroundColor);
+      btnOption3.setForeground(textColor);
+      btnQuit.setBackground(foregroundColor);
+      btnQuit.setForeground(textColor);
+   }
+   
    public void setStringListener(StringListener listener)
    {
       this.textListener = listener;   
@@ -139,7 +143,7 @@ public class MenuPanel extends JPanel implements ActionListener {
          System.out.println(">>>clicked btnOption3");
          if(this.textListener != null)
          {
-            textListener.textEmitted("Option 3\n");
+            textListener.textEmitted("changeTheme\n");
          }
          
       }

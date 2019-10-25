@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 
+import java.awt.Color;
+
 public class ContentPanel extends JPanel {
 
    private JTextArea textArea;
@@ -15,6 +17,11 @@ public class ContentPanel extends JPanel {
       setLayout(new BorderLayout());
       
       add(new JScrollPane(textArea), BorderLayout.CENTER);
+   }
+   
+   public void setTheme(Color backgroundColor, Color foregroundColor, Color textColor)
+   {
+   
    }
    
    public void appendText(String text)
