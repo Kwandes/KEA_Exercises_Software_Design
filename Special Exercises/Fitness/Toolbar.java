@@ -46,7 +46,7 @@ public class Toolbar extends JPanel implements ActionListener {
          System.out.println(">>>clicked btnHello");
          if(this.textListener != null)
          {
-            textListener.textEmitted("Hello\n");
+            textListener.textEmitted("Hello");
          }
       }
       else if(clicked == btnGoodbye)
@@ -54,7 +54,7 @@ public class Toolbar extends JPanel implements ActionListener {
          System.out.println(">>>clicked btnGoodbye");
          if(this.textListener != null)
          {
-            textListener.textEmitted("Bye\n");
+            textListener.textEmitted("Bye");
          }
          
       }

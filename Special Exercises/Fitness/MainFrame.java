@@ -38,7 +38,15 @@ public class MainFrame extends JFrame{
       toolbar.setStringListener(new StringListener() {
          public void textEmitted(String text)
          {  
-            textPanel.appendText(text);
+            if(text.equals("Hello"))
+            {
+               textPanel.appendText(text+"\n");
+            }
+            else if(text.equals("Bye"));
+            {
+               System.out.println("<<<Yeet>>>");
+               System.exit(0);
+            }
          }
       });
       
@@ -47,8 +55,28 @@ public class MainFrame extends JFrame{
          {
             String name = e.getName();
             String occupation = e.getOccupation();
+            int ageCat = e.getAgeCategory();
+            String empCat = e.getEmpCategory();
+            String gender = e.getGender();
             
-            textPanel.appendText(name + " - " + occupation + "\n");
+            String displayInfo = name + " - " + occupation + " | " + ageCat + " | " + empCat + " | " + gender;
+            
+            boolean euCitizen = e.getCitizenStatus();
+            if(euCitizen)
+            {
+               String taxId = e.getTaxId();
+               displayInfo += " | Eu Citizen. Tax ID: " + taxId;
+            }
+            else
+            {
+               displayInfo += " | Not a EU Citizen";
+            }
+            
+            displayInfo += "\n";
+            if(!name.equals(""))
+            {
+               textPanel.appendText(displayInfo);
+            }
          }      
       });
       
