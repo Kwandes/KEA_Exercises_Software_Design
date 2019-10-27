@@ -6,7 +6,74 @@ public class Logo {
 
    private Random rand;
    
-   public void printLogo()
+   public void printMainMenuLogo()
+   {
+      System.out.print(""
+      +"                                                  \n"
+      +"     STAR GYM                                  ___ \n"
+      +"            YOUR FITNESS GALAXY            ,o88888\n" 
+      +"                                         ,o8888888'\n" 
+      +"                   ,:o:o:oooo.        ,8O88Pd8888\" \n"
+      +"               ,.::.::o:ooooOoOoO. ,oO8O8Pd888'\" \n"
+      +"             ,.:.::o:ooOoOoOO8O8OOo.8OOPd8O8O\" \n"
+      +"            , ..:.::o:ooOoOOOO8OOOOo.FdO8O8\" \n"
+      +"           , ..:.::o:ooOoOO8O888O8O,COCOO\" \n"
+      +"          , . ..:.::o:ooOoOOOO8OOOOCOCO\" \n"
+      +"           . ..:.::o:ooOoOoOO8O8OCCCC\"o \n"
+      +"              . ..:.::o:ooooOoCoCCC\"o:o \n"
+      +"              . ..:.::o:o:,cooooCo\"oo:o: \n"
+      +"           `   . . ..:.:cocoooo\"'o:o:::' \n"
+      +"           .`   . ..::ccccoc\"'o:o:o:::' \n"
+      +"          :.:.    ,c:cccc\"':.:.:.:.:.' \n"
+      +"        ..:.:\"'`::::c:\"'..:.:.:.:.:.' \n"
+      +"      ...:.'.:.::::\"'    . . . . .' \n"
+      +"     .. . ....:.\"' `   .  . . '' \n"
+      +"   . . . ....\"'\n"    
+      +"   .. . .\"'    \n" 
+      +"  . \n"
+      );  
+   }
+   
+   public void printQuitLogo()
+   {
+      System.out.print("\n\n\n"
+      +"                               ........                                  \n"
+      +"                               ;::;;::;,                                 \n"
+      +"                               ;::;;::;;,                                \n"
+      +"                              ;;:::;;::;;,                               \n"
+      +"              .vnmmnv%vnmnv%,.;;;:::;;::;;,  .,vnmnv%vnmnv,              \n"
+      +"           vnmmmnv%vnmmmnv%vnmmnv%;;;;;;;%nmmmnv%vnmmnv%vnmmnv           \n"
+      +"         vnmmnv%vnmmmmmnv%vnmmmmmnv%;:;%nmmmmmmnv%vnmmmnv%vnmmmnv        \n"
+      +"        vnmmnv%vnmmmmmnv%vnmmmmmmmmnv%vnmmmmmmmmnv%vnmmmnv%vnmmmnv       \n"
+      +"       vnmmnv%vnmmmmmnv%vnmmmmmmmmnv%vnmmmmmmmmmmnv%vnmmmnv%vnmmmnv      \n"
+      +"      vnmmnv%vnmmmmmnv%vnmm;mmmmmmnv%vnmmmmmmmm;mmnv%vnmmmnv%vnmmmnv,    \n"
+      +"     vnmmnv%vnmmmmmnv%vnmm;' mmmmmnv%vnmmmmmmm;' mmnv%vnmmmnv%vnmmmnv    \n"
+      +"     vnmmnv%vnmmmmmnv%vn;;    mmmmnv%vnmmmmmm;;    nv%vnmmmmnv%vnmmmnv   \n"
+      +"    vnmmnv%vnmmmmmmnv%v;;      mmmnv%vnmmmmm;;      v%vnmmmmmnv%vnmmmnv  \n"  
+      +"    vnmmnv%vnmmmmmmnv%vnmmmmmmmmm;;       mmmmmmmmmnv%vnmmmmmmnv%vnmmmnv \n"
+      +"    vnmmnv%vnmmmmmmnv%vnmmmmmmmmmm;;     mmmmmmmmmmnv%vnmmmmmmnv%vnmmmnv \n"
+      +"    vnmmnv%vnmmmmm nv%vnmmmmmmmmmmnv;, mmmmmmmmmmmmnv%vn;mmmmmnv%vnmmmnv \n" 
+      +"    vnmmnv%vnmmmmm  nv%vnmmmmmmmmmnv%;nmmmmmmmmmmmnv%vn; mmmmmnv%vnmmmnv \n"
+      +"    `vnmmnv%vnmmmm,  v%vnmmmmmmmmmmnv%vnmmmmmmmmmmnv%v;  mmmmnv%vnnmmnv' \n"
+      +"     vnmmnv%vnmmmm;,   %vnmmmmmmmmmnv%vnmmmmmmmmmnv%;'   mmmnv%vnmmmmnv  \n"
+      +"      vnmmnv%vnmmmm;;,   nmmm;'              mmmm;;'    mmmnv%vnmmmmnv'  \n"
+      +"      `vnmmnv%vnmmmmm;;,.         mmnv%v;,            mmmmnv%vnmmmmnv'   \n"
+      +"       `vnmmnv%vnmmmmmmnv%vnmmmmmmmmnv%vnmmmmmmnv%vnmmmmmnv%vnmmmmnv'    \n"
+      +"         `vnmvn%vnmmmmmmnv%vnmmmmmmmnv%vnmmmmmnv%vnmmmmmnv%vnmmmnv'      \n"
+      +"             `vn%vnmmmmmmn%:%vnmnmmmmnv%vnmmmnv%:%vnmmnv%vnmnv'          \n"
+      +"                                                                         \n"
+      +"    #  #   #   #### #### #   #                                           \n"
+      +"    ####  ###  # ## # ##  ###                                            \n"
+      +"    #  # # # # #    #      #                                             \n"
+      +"                                                                         \n"
+      +"           #  #   #   #   #    ##  #     # #### #### #  ##               \n"
+      +"           ####  ###  #   #   #  #  # # #  #--  #--  # # #               \n"
+      +"           #  # #   # ### ###  ##    ###   #### #### ##  #               \n"
+      );
+   
+   }
+   
+   public void printAccessDenied()
    {
    
       rand = new Random();

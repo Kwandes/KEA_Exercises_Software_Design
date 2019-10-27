@@ -22,6 +22,7 @@ public class Interface{
    private ArrayList<User> searchResults;
    
    private Backend backend;
+   private Logo logo;
    
    ///////////////////// Menu Navigation /////////////////////
    public Interface(String appName)
@@ -34,6 +35,8 @@ public class Interface{
       
       backend = new Backend();
       userList = backend.readFile(fileName);
+      
+      logo = new Logo();
    }
    
    public void display()
@@ -65,11 +68,13 @@ public class Interface{
       }
    }
    
-   // Menus:
+   ///////////////////// Menus /////////////////////
    
    // Screen 1
    public void mainMenu()
    {
+      logo.printMainMenuLogo();
+      
       topBar("Main Menu");
    
       System.out.println(" What would you like to do: ");
@@ -330,11 +335,12 @@ public class Interface{
    // Screen 7
    public void quitMenu()
    {
+      logo.printQuitLogo();
       this.running = false;
       this.screenNumber = 99;
    }
    
-   // Extra Interface displays
+   ///////////////////// Extra Interface displays /////////////////////
    
    public void topBar(String screenTitle)
    {
@@ -384,7 +390,7 @@ public class Interface{
       else 
       {  
          Logo accessDenied = new Logo();
-         accessDenied.printLogo();
+         accessDenied.printAccessDenied();
          System.out.println("Incorrect password. ACCESS DENIED");
          try {Thread.sleep(5000);}
          catch (InterruptedException e) {};
