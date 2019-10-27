@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 
+import java.util.ArrayList;
+
 public class MainFrame extends JFrame{
 
    private MenuPanel menuPanel;
@@ -29,7 +31,9 @@ public class MainFrame extends JFrame{
    Color foregroundColor;
    Color textColor;
    
-   boolean whiteTheme = false;;
+   boolean whiteTheme = false;
+   
+   private ArrayList<User> userList;
 
    public MainFrame()
    {
