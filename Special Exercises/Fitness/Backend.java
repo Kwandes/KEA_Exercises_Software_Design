@@ -1,6 +1,9 @@
 // Fitness Exercise, File working setup
 // Jan Bogoryja-Zakrzewski, Dat19i
 
+// Backend, handles all File operations and complex ArrayList operations
+// Doesn't print anything to console
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -12,10 +15,9 @@ public class Backend{
 
    public Backend(){}
    
+   ///////////////////  ArrayList Operations /////////////////// 
    public ArrayList<User> modifyUser(ArrayList<User> userArray, String searchQuery, User modifiedUser)
-   {
-      System.out.println("Debugging modifyUser()");
-      
+   {     
       for(int i = 0; i < userArray.size(); i++)
       {
          if(userArray.get(i).toString().toLowerCase().contains(searchQuery.toLowerCase())) userArray.set(i, modifiedUser);
@@ -24,9 +26,7 @@ public class Backend{
    }
    
    public ArrayList<User> deleteUser(ArrayList<User> userArray, String searchQuery)
-   {
-      System.out.println("Debugging deleteUser()");
-      
+   {      
       for(int i = 0; i < userArray.size(); i++)
       {
          if(userArray.get(i).toString().toLowerCase().contains(searchQuery.toLowerCase())) userArray.remove(i);
@@ -35,10 +35,9 @@ public class Backend{
    }
    
    
-   // File operations
+   ///////////////////  File Operations /////////////////// 
    public ArrayList<User> readFile(String fileName)
    {
-      System.out.println("Debugging readFile()");
       ArrayList<User> userArray = new ArrayList<User>();
       
       File file = new File(fileName);
@@ -52,8 +51,9 @@ public class Backend{
             String userID = fileContent.next();
             String userCPR = fileContent.next();
             String userType = fileContent.next();
+            String userHoursWorked = fileContent.next();
             String userName = fileContent.nextLine();
-            userArray.add(new User(userCPR, userType, userName.replaceFirst(" ", "")));   // Weird bug, it adds a whitespace to the beginning of the name. Faisal halp
+            userArray.add(new User(userType, userCPR, userHoursWorked, userName.replaceFirst(" ", "")));   // Weird bug, it adds a whitespace to the beginning of the name. Faisal halp
          }
       }
       catch (FileNotFoundException e) { System.out.println("Critcal error - file missing!\n" + e);   }
@@ -63,8 +63,6 @@ public class Backend{
    
    public void saveToFile(ArrayList<User> userArray, String fileName)
    {
-      System.out.println("Debugging saveToFile()");
-      
       try
       {
          FileWriter file = new FileWriter(fileName);
@@ -80,8 +78,6 @@ public class Backend{
    
    public void renameFile(String fileName, String newFileName)
    {
-      System.out.println("Debugging renameFile()");
-      
       File file = new File(fileName);
       File newFile = new File(newFileName);
       
@@ -96,8 +92,6 @@ public class Backend{
    
    public ArrayList<User> searchArray(ArrayList<User> userArray, String searchQuery)
    {
-      System.out.println("Debugging SearchArray()");
-      
       ArrayList<User> userMatches = new ArrayList<User>();
       
       searchQuery = searchQuery.toLowerCase();

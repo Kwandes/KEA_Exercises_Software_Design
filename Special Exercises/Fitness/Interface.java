@@ -1,26 +1,39 @@
 // Fitness Exercise, User Interface setup
 // Jan Bogoryja-Zakrzewski, Dat19i
 
+// User interface handles displaying everything in console
+// as well as user input
+// Most of the code is here
+
 import java.util.Scanner;
-import java.io.BufferedOutputStream;
-import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class Interface{
 
-   String title;
-   boolean running;
-   int screenNumber;
-   boolean adminPerm;
-   String ADMIN_PASSWORD = "abcDEF123";   // yes, I should pull it from config or DB but KISS
+   private String title;
+   private boolean running;      // Is the Menu still active
+   private int screenNumber;
    
-   //Region - Menu navigation
-   //-------------------------------------------------------------
+   private boolean adminPerm;
+   private String ADMIN_PASSWORD = "abcDEF123";   // yes, I should pull it from config or DB but KISS
+   
+   private String fileName;
+   private ArrayList<User> userList;
+   private ArrayList<User> searchResults;
+   
+   private Backend backend;
+   
+   ///////////////////// Menu Navigation /////////////////////
    public Interface(String appName)
    {
       this.title = appName;
       this.running = true;
       this.screenNumber  = 1;
       this.adminPerm = false;
+      this.fileName = "userList.txt";
+      
+      backend = new Backend();
+      userList = backend.readFile(fileName);
    }
    
    public void display()
@@ -30,15 +43,24 @@ public class Interface{
          clearScreen();
          switch(screenNumber)
          {
-            case 1:     mainMenu();       break;
-            case 2:     showUsers();      break;
-            case 3:     searchUsers();    break;
-            case 4:     modifyUser(false);break;
-            case 45:    modifyUser(true);break;
-            case 5:     addUser();        break;
-            case 6:     settingsMenu();   break;
-            case 7:     quitMenu();       break;
-            default:    quitMenu();       break;
+            case 1:     mainMenu();       
+               break;
+            case 2:     showUsers();      
+               break;
+            case 3:     searchUsers();    
+               break;
+            case 4:     modifyUser(false);
+               break;
+            case 45:    modifyUser(true); 
+               break;
+            case 5:     addUser();        
+               break;
+            case 6:     settingsMenu();   
+               break;
+            case 7:     quitMenu();       
+               break;
+            default:    quitMenu();       
+               break;
          }
       }
    }
@@ -48,23 +70,31 @@ public class Interface{
    // Screen 1
    public void mainMenu()
    {
-		topBar("Main Menu");
-
-		System.out.println(" What would you like to do: ");
-		System.out.print(" [1] See all users \n [2] Search users \n [3] Add a new user \n [4] Modify a user \n [5] Remove a user \n [6] Quit \n");
-		System.out.print(" >");
-
-		switch(input().toLowerCase())
-		{
-			case "1":      this.screenNumber = 2;  break;
-			case "2":      this.screenNumber = 3;  break;
-			case "3":      this.screenNumber = 5;  break;
-			case "4":      this.screenNumber = 4;  break;
-			case "5":      this.screenNumber = 45; break;
-			case "6":      this.screenNumber = 7;  break;
-			case "quit":   this.screenNumber = 7;  break;
-			default:       this.screenNumber = 1;  break;
-		}
+      topBar("Main Menu");
+   
+      System.out.println(" What would you like to do: ");
+      System.out.print(" [1] See all users \n [2] Search users \n [3] Add a new user \n [4] Modify a user \n [5] Remove a user \n [6] Quit \n");
+      System.out.print(" >");
+   
+      switch(input().toLowerCase())
+      {
+         case "1":      this.screenNumber = 2;  
+            break;
+         case "2":      this.screenNumber = 3;  
+            break;
+         case "3":      this.screenNumber = 5;  
+            break;
+         case "4":      this.screenNumber = 4;  
+            break;
+         case "5":      this.screenNumber = 45; 
+            break;
+         case "6":      this.screenNumber = 7;  
+            break;
+         case "quit":   this.screenNumber = 7;  
+            break;
+         default:       this.screenNumber = 1;  
+            break;
+      }
       
    }
    
@@ -73,7 +103,11 @@ public class Interface{
    {
       topBar("Users");
       
-      displayAllUsers();
+      userList = backend.readFile(fileName);
+      
+      if(userList == null) System.out.println("<<< NO RESULTS >>>");
+      else displayUsers(userList);
+      System.out.println("----------------------------------------------------------------");
       
       System.out.println(" What would you like to do: ");
       System.out.print(" [1] Search for a specific user \n [2] Modify a user \n [3] Add a new user \n [4] Main Menu \n");
@@ -81,116 +115,172 @@ public class Interface{
       
       switch(input().toLowerCase())
       {
-         case "1":      this.screenNumber = 3;  break;
-         case "2":      this.screenNumber = 4;  break;
-         case "3":      this.screenNumber = 5;  break;
-         case "4":      this.screenNumber = 1;  break;
-         default:       this.screenNumber = 2;  break;
+         case "1":      this.screenNumber = 3;  
+            break;
+         case "2":      this.screenNumber = 4;  
+            break;
+         case "3":      this.screenNumber = 5;  
+            break;
+         case "4":      this.screenNumber = 1;  
+            break;
+         default:       this.screenNumber = 2;  
+            break;
       }
    }
    
    // Screen 3
    public void searchUsers()
    {
-		topBar("Search");
+      topBar("Search");
       
-		System.out.print(" Input your search query (a name, CPR, user type etc). If you want to return, input \"return\" \n");
-		System.out.print(" >");
-
-		String tempInput = input().toLowerCase();
-
-		switch(tempInput)
-		{
-   		case "return": this.screenNumber = 1;  break;
-   		case "quit":   this.screenNumber = 1;  break;
-   		default:
-      		clearScreen();
-      		topBar("Search Results \"" + tempInput + "\"");
-      		Backend system = new Backend();
-            system.searchUsers(tempInput);
-      		System.out.println("------------------------------------------------");
+      System.out.print(" Input your search query (a name, CPR, user type etc). If you want to return, input \"return\" \n");
+      System.out.print(" >");
+   
+      String tempInput = input().toLowerCase();
+   
+      switch(tempInput)
+      {
+         case "return": this.screenNumber = 1;  
+            break;
+         case "quit":   this.screenNumber = 1;  
+            break;
+         default:
+            clearScreen();
+            topBar("Search Results \"" + tempInput + "\"");
             
-      		System.out.println(" What would you like to do: ");
-      		System.out.print(" [1] Perform another search \n [2] Modify a user \n [3] Delete a user \n [4] return \n");
-      		System.out.print(" >");
+            searchResults = backend.searchArray(userList, tempInput);
+            
+            if(searchResults.isEmpty()) System.out.println("<<< NO RESULTS >>>");
+            else displayUsers(searchResults);
+            System.out.println("----------------------------------------------------------------");
+            searchResults = null;
+            
+            System.out.println(" What would you like to do: ");
+            System.out.print(" [1] Perform another search \n [2] Modify a user \n [3] Delete a user \n [4] return \n");
+            System.out.print(" >");
             tempInput = input().toLowerCase();
             
-      		switch(tempInput)
-      		{
-      			case "1":		this.screenNumber = 3;  break;
-      			case "2":       modifyUser(false);	this.screenNumber = 1;  break;
-      			case "3":       modifyUser(true);	this.screenNumber = 1;  break;
-      			case "4":       this.screenNumber = 1;  break;
-      			case "quit":	this.screenNumber = 7;  break;
-      			case "return":	this.screenNumber = 1;	break;
-      			default:        this.screenNumber = 1;  break;
-      		}
-      		break;
-		}
-
-		}
+            switch(tempInput)
+            {
+               case "1":		   this.screenNumber = 3;  
+                  break;
+               case "2":         modifyUser(false);	this.screenNumber = 1;  
+                  break;
+               case "3":         modifyUser(true);	   this.screenNumber = 1;  
+                  break;
+               case "4":         this.screenNumber = 1;  
+                  break;
+               case "quit":	   this.screenNumber = 7;  
+                  break;
+               case "return":	   this.screenNumber = 1;	
+                  break;
+               default:          this.screenNumber = 1;  
+                  break;
+            }
+            break;
+      }
+   
+   }
 
    // Screen 4
    public void modifyUser(boolean deleteUser)
    {
-      if(deleteUser)topBar("Delete User"); else topBar("Modify User");
+      if(deleteUser)topBar("Delete User"); 
+      else topBar("Modify User");
+      
+      // Check Admin perms
+      if ( !adminLogon()) this.screenNumber = 1;
       
       System.out.print(" Input User name or CPR number. If you want to return, input \"return\" \n");
       System.out.print(" >");
       
       String tempInput = input().toLowerCase();
-      System.out.println("------------------------------------------------");
-
-		switch(tempInput)
-		{
-   		case "return": this.screenNumber = 1;  break;
-   		case "quit":   this.screenNumber = 1;  break;
-   		default:
-      		Backend system = new Backend();
+      System.out.println("----------------------------------------------------------------");
+   
+      switch(tempInput)
+      {
+         case "return":
+            this.screenNumber = 1;  
+            break;
+            
+         case "quit":
+            this.screenNumber = 1;  
+            break;
+            
+         default:
             
             boolean repeat = true;
             
             while(repeat)
             {
             
-               int searchResult = system.searchUsers(tempInput);
-               System.out.println("------------------------------------------------");
+               searchResults = backend.searchArray(userList, tempInput);
                
-               if(searchResult == 0)
+               System.out.println("----------------------------------------------------------------");
+               
+               if(searchResults.isEmpty())
                {
-                  System.out.println(" No results. Try using a different query");
-         		   System.out.print(" >");
+                  System.out.println(" No results. Try using a different query. Type \"return\" to go back");
+                  System.out.print(" >");
                   tempInput = input().toLowerCase();
-                  System.out.println("------------------------------------------------");
-                  if(deleteUser) this.screenNumber = 45; else this.screenNumber = 4;
+                  System.out.println("----------------------------------------------------------------");
+                  if(deleteUser) this.screenNumber = 45; 
+                  else this.screenNumber = 4;
+                  
+                  // Return to main menu
+                  if(tempInput.equals("return"))
+                  {
+                     this.screenNumber = 1;
+                     break;
+                  }
                }
-               else if(searchResult > 1)
+               else if(searchResults.size() >= 2)
                {
-                  System.out.println(" Multiple matches. Try using the CPR number");
-         		   System.out.print(" >");
+                  System.out.println(" Multiple matches. Try using the CPR number. Type \"return\" to go back");
+                  System.out.print(" >");
                   tempInput = input().toLowerCase();
-                  System.out.println("------------------------------------------------");
-                  if(deleteUser) this.screenNumber = 45; else this.screenNumber = 4;
+                  System.out.println("----------------------------------------------------------------");
+                  if(deleteUser) this.screenNumber = 45; 
+                  else this.screenNumber = 4;
+                  
+                  // Return to main Menu
+                  if(tempInput.equals("return"))
+                  {
+                     this.screenNumber = 1;
+                     break;
+                  }
                }
                else
                {
                   // tempInput is the searchQuery that will have only one match.
-                  // Now I just need to pass it to the backend along with delete? flag and do the magic
-                  // There are probably bugs but it's 1:30am
+                  displayUsers(searchResults);                  
+                  System.out.println("----------------------------------------------------------------");
                   repeat = false;
-                  System.out.println("all good fam. Press enter to proceed");
-                  input();
+                  System.out.println("all good, proceeding");
+                  //input();
                   this.screenNumber = 1;
+                  
+                  if(deleteUser)
+                  {
+                     userList = backend.deleteUser(userList, tempInput);
+                  }
+                  else
+                  {
+                     userList = backend.modifyUser(userList, tempInput, createNewUser(searchResults.get(0).getName()));
+                  }
+                  backend.saveToFile(userList, fileName);
+                  searchResults = null;
                }
             }
             break;
-		}
+      }
    }
    // Screen 5
    public void addUser()
    {
       topBar("New User");
       
+      // Check Admin Perms
       if ( !adminLogon()) this.screenNumber = 1;
       else
       {
@@ -201,14 +291,16 @@ public class Interface{
          
          switch(tempInput)
          {
-            case "return": this.screenNumber = 1;  break;
-            case "quit":   this.screenNumber = 1;  break;
+            case "return": this.screenNumber = 1;  
+               break;
+            case "quit":   this.screenNumber = 1;  
+               break;
             default:       
                this.screenNumber = 1;
-               addNewUser(tempInput);
+               userList.add(createNewUser(tempInput));
+               backend.saveToFile(userList, fileName);
                break;
          }
-
       }
    }   
    
@@ -224,10 +316,14 @@ public class Interface{
       
       switch(input().toLowerCase())
       {
-         case "1":            this.screenNumber = 1;  break;
-         case "main":    this.screenNumber = 1;  break;
-         case "quit":         this.screenNumber = 1;  break;
-         default:             this.screenNumber = 6;  break;
+         case "1":            this.screenNumber = 1;  
+            break;
+         case "main":    this.screenNumber = 1;  
+            break;
+         case "quit":         this.screenNumber = 1;  
+            break;
+         default:             this.screenNumber = 6;  
+            break;
       }
    }
    
@@ -243,25 +339,24 @@ public class Interface{
    public void topBar(String screenTitle)
    {
       System.out.println(this.title + " - " + screenTitle);
-      System.out.println("------------------------------------------------");
+      System.out.println("----------------------------------------------------------------");
    }
    
    public String input()
    {
-         Scanner console = new Scanner(System.in);
-         return console.nextLine();      
+      Scanner console = new Scanner(System.in);
+      return console.nextLine();      
    }
    
    public void clearScreen()
    {  
       System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");      // 30 newlines
    }
-   //-------------------------------------------------------------
+   //---------------------------------------------------
    
    
    
-   //Region - user logic
-   //-------------------------------------------------------------
+   ///////////////////// User Logic /////////////////////
    public void setPerms(boolean perms)
    {
       this.adminPerm = perms;
@@ -274,7 +369,8 @@ public class Interface{
    
    public boolean adminLogon()
    {
-      if(checkPerms()) return true;
+      if(checkPerms()) 
+         return true;
       
       System.out.println("you need admin permissions to perform this action.");
       System.out.print("password:>");
@@ -282,32 +378,39 @@ public class Interface{
       {
          setPerms(true);
          System.out.println("password is correct. Hello Admin");
+         System.out.println("----------------------------------------------------------------");
          return true;
       }
       else 
-      {
+      {  
+         Logo accessDenied = new Logo();
+         accessDenied.printLogo();
          System.out.println("Incorrect password. ACCESS DENIED");
-         try {Thread.sleep(2000);}
+         try {Thread.sleep(5000);}
          catch (InterruptedException e) {};
          clearScreen();
          return false;
       }
    }
    
-   public void displayAllUsers()
+   public void displayUsers(ArrayList<User> array)
    {
-      Backend system = new Backend();
-      system.displayAllContents();
-      System.out.println("------------------------------------------------");
+      if(array != null )
+      {
+         for(int i = 0; i < array.size(); i++)
+         {
+            System.out.println(array.get(i).toString());
+         }
+      }
    }
    
-   public void addNewUser(String name)
+   public User createNewUser(String name)
    {
       Backend system = new Backend();
       
       String type = "basic";
       String cpr = "CPR69420";
-      String paymentStatus = "false";
+      String hoursWorked = "0";
       
       boolean repeat = true;
       
@@ -332,13 +435,13 @@ public class Interface{
       }
       repeat = true;
       
-      // Type
+      // User Type
       System.out.println("What is the type of the user:"
                            + "\n[1]an employee"
                            + "\n[2]a member");
       System.out.print(" >");
       type = input().toLowerCase();
-      System.out.println("------------------------------------------------");
+      System.out.println("----------------------------------------------------------------");
       
       while(repeat)
       {
@@ -351,7 +454,7 @@ public class Interface{
             
             type = input().toLowerCase();
             
-            System.out.println("------------------------------------------------");
+            System.out.println("----------------------------------------------------------------");
             while(repeat)
             {
                if( type.equals("admin") || type.equals("a") || type.equals("1"))
@@ -363,13 +466,19 @@ public class Interface{
                {
                   type = "instructor";
                   repeat = false;
+                  
+                  // Hours Worked, on average
+                  System.out.println("How many hours do they work, on avg:");
+                  System.out.print(" >");
+                  hoursWorked = input().toLowerCase();
+                  System.out.println("----------------------------------------------------------------");
                }
                else
                {
                   System.out.println("Incorrect type. Please use either admin or instructor!");
                   System.out.print(" >");
                   type = input().toLowerCase();
-                  System.out.println("------------------------------------------------");
+                  System.out.println("----------------------------------------------------------------");
                }
             }
          }
@@ -381,12 +490,11 @@ public class Interface{
                                  + "\n[1]basic"
                                  + "\n[2]full");
             System.out.print(" >");
-            System.out.println("------------------------------------------------");
+            System.out.println("----------------------------------------------------------------");
             
             type = input().toLowerCase();
             while(repeat)
             {
-               System.out.println("DEBUGGING <userType - member>");
                
                if( type.equals("basic") || type.equals("b") || type.equals("1"))
                {
@@ -403,39 +511,7 @@ public class Interface{
                   System.out.println("Incorrect type. Please use either basic or full!");
                   System.out.print(" >");
                   type = input().toLowerCase();
-                  System.out.println("------------------------------------------------");
-               }
-            }
-            
-            // Payed?
-            System.out.println("Did they pay for their membership:"
-                                 + "\n[1]Yes"
-                                 + "\n[2]No");
-            System.out.print(" >");
-            System.out.println("------------------------------------------------");
-            
-            paymentStatus = input().toLowerCase();
-            
-            repeat = true;
-            
-            while(repeat)
-            {
-               if( paymentStatus.equals("yes") || paymentStatus.equals("y") || paymentStatus.equals("1"))
-               {
-                  paymentStatus = "true";
-                  repeat = false;
-               }
-               else if ( paymentStatus.equals("no") || paymentStatus.equals("n") || paymentStatus.equals("2"))
-               {
-                  paymentStatus = "false";
-                  repeat = false;
-               }
-               else
-               {
-                  System.out.println("Incorrect type. Please use either yes or no!");
-                  System.out.print(" >");
-                  paymentStatus = input().toLowerCase();
-                  System.out.println("------------------------------------------------");
+                  System.out.println("----------------------------------------------------------------");
                }
             }
          }
@@ -444,20 +520,12 @@ public class Interface{
             System.out.println("Incorrect type. Please use either employee or member");
             System.out.print(" >");
             type = input().toLowerCase();
-            System.out.println("------------------------------------------------");
+            System.out.println("----------------------------------------------------------------");
          }
       
       }
       repeat = true;
       
-      if(type.equals("admin") || type.equals("instructor")) system.addNewUser(type, cpr, name);   
-      else system.addNewUser(type, cpr, paymentStatus, name);
-   }
-   
-   public void searchUser(String searchQuery)
-   {
-      Backend system = new Backend();      
-      system.searchUsers(searchQuery);
-      System.out.println("------------------------------------------------");
+      return (new User(type, cpr, hoursWorked, name));
    }
 }
