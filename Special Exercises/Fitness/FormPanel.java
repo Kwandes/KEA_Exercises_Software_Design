@@ -23,6 +23,7 @@ import javax.swing.border.Border;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class FormPanel extends JPanel {
 
@@ -70,6 +71,7 @@ public class FormPanel extends JPanel {
       otherRadio = new JRadioButton("other");
       otherRadio.setActionCommand("other");
       genderGroup = new ButtonGroup();
+      btnOk = new JButton("OK");
       
       // Set up gender radio
       genderGroup.add(maleRadio);
@@ -109,7 +111,8 @@ public class FormPanel extends JPanel {
       empCombo.setModel(empModel);
       empCombo.setSelectedIndex(0);
       
-      btnOk = new JButton("OK");
+      // BtnOK setup
+      btnOk.setMnemonic(KeyEvent.VK_O);
       
       btnOk.addActionListener(new ActionListener() {
          
