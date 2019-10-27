@@ -25,6 +25,7 @@ public class MainFrame extends JFrame{
    private TextPanel textPanel;
    private Toolbar toolbar;
    private FormPanel formPanel;
+   private TablePanel tablePanel;
    private JFileChooser fileChooser;
 
    public MainFrame()
@@ -45,7 +46,9 @@ public class MainFrame extends JFrame{
       toolbar = new Toolbar();
       textPanel = new TextPanel();
       formPanel = new FormPanel();
+      tablePanel = new TablePanel();
       fileChooser = new JFileChooser();
+      fileChooser.addChoosableFileFilter(new PersonFileFilter());
       
       // Set up menu bar
       setJMenuBar(createMenuBar());
@@ -97,7 +100,8 @@ public class MainFrame extends JFrame{
       });
       
       add(toolbar, BorderLayout.NORTH);
-      add(textPanel, BorderLayout.CENTER);
+      //add(textPanel, BorderLayout.CENTER);
+      add(tablePanel, BorderLayout.CENTER);
       add(formPanel, BorderLayout.WEST);
       
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
