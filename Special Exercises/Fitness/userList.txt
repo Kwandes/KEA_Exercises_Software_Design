@@ -3,11 +3,13 @@ BJ123 CPR12223 basic 0 Jeff
 FJ123 CPR11223 full 0 Jessica
 IC214 CPR22114 instructor 69 Chad
 BD135 CPR12345 basic 0 Dave
-At111 CPR11111 admin 0 test1
-It222 CPR22222 instructor 16 test2
-Bt333 CPR33333 basic 0 test3
-Ft444 CPR44444 full 0 test4
-Ft666 CPR66666 full 0 test6
-At135 CPR12345 admin 0 test7
-Bs640 CPR69420 basic 0 sanitycheck
-Af123 CPR11223 admin 0 faisal
+IN222 CPR22222 instructor 16 NamelessTester2
+BN333 CPR33333 basic 0 NamelessTester3
+FN444 CPR44444 full 0 NamelessTester4
+FN666 CPR66666 full 0 NamelessTester6
+AN135 CPR12345 admin 0 NamelessTester7
+BJ640 CPR69420 basic 0 Jesus
+AF123 CPR11223 admin 0 Faisal
+IO133 CPR19393 instructor 37 OsCar
+ID864 CPR87654 instructor 10 Dave's Brother
+IO135 CPR12345 instructor 20 Oscar

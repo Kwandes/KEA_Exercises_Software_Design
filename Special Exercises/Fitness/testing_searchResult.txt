@@ -1,0 +1,6 @@
+BT111 CPR11111 basic 0 Test 1.0
+FT112 CPR11112 full 0 Test 1.1
+AT113 CPR11113 admin 0 Test 1.2
+IT114 CPR11114 instructor 15 Test 1.2
+BT115 CPR11115 basic 0 Test 2.0
+BT116 CPR11116 basic 0 Test 2.1

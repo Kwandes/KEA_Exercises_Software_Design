@@ -195,89 +195,91 @@ public class Interface{
       
       // Check Admin perms
       if ( !adminLogon()) this.screenNumber = 1;
+      else
+      {      
+         System.out.print(" Input User name or CPR number. If you want to return, input \"return\" \n");
+         System.out.print(" >");
+         
+         String tempInput = input().toLowerCase();
+         System.out.println("----------------------------------------------------------------");
       
-      System.out.print(" Input User name or CPR number. If you want to return, input \"return\" \n");
-      System.out.print(" >");
-      
-      String tempInput = input().toLowerCase();
-      System.out.println("----------------------------------------------------------------");
-   
-      switch(tempInput)
-      {
-         case "return":
-            this.screenNumber = 1;  
-            break;
-            
-         case "quit":
-            this.screenNumber = 1;  
-            break;
-            
-         default:
-            
-            boolean repeat = true;
-            
-            while(repeat)
-            {
-            
-               searchResults = backend.searchArray(userList, tempInput);
+         switch(tempInput)
+         {
+            case "return":
+               this.screenNumber = 1;  
+               break;
                
-               System.out.println("----------------------------------------------------------------");
+            case "quit":
+               this.screenNumber = 1;  
+               break;
                
-               if(searchResults.isEmpty())
+            default:
+               
+               boolean repeat = true;
+               
+               while(repeat)
                {
-                  System.out.println(" No results. Try using a different query. Type \"return\" to go back");
-                  System.out.print(" >");
-                  tempInput = input().toLowerCase();
-                  System.out.println("----------------------------------------------------------------");
-                  if(deleteUser) this.screenNumber = 45; 
-                  else this.screenNumber = 4;
+               
+                  searchResults = backend.searchArray(userList, tempInput);
                   
-                  // Return to main menu
-                  if(tempInput.equals("return"))
+                  System.out.println("----------------------------------------------------------------");
+                  
+                  if(searchResults.isEmpty())
                   {
-                     this.screenNumber = 1;
-                     break;
+                     System.out.println(" No results. Try using a different query. Type \"return\" to go back");
+                     System.out.print(" >");
+                     tempInput = input().toLowerCase();
+                     System.out.println("----------------------------------------------------------------");
+                     if(deleteUser) this.screenNumber = 45; 
+                     else this.screenNumber = 4;
+                     
+                     // Return to main menu
+                     if(tempInput.equals("return"))
+                     {
+                        this.screenNumber = 1;
+                        break;
+                     }
                   }
-               }
-               else if(searchResults.size() >= 2)
-               {
-                  System.out.println(" Multiple matches. Try using the CPR number. Type \"return\" to go back");
-                  System.out.print(" >");
-                  tempInput = input().toLowerCase();
-                  System.out.println("----------------------------------------------------------------");
-                  if(deleteUser) this.screenNumber = 45; 
-                  else this.screenNumber = 4;
-                  
-                  // Return to main Menu
-                  if(tempInput.equals("return"))
+                  else if(searchResults.size() >= 2)
                   {
-                     this.screenNumber = 1;
-                     break;
-                  }
-               }
-               else
-               {
-                  // tempInput is the searchQuery that will have only one match.
-                  displayUsers(searchResults);                  
-                  System.out.println("----------------------------------------------------------------");
-                  repeat = false;
-                  System.out.println("all good, proceeding");
-                  //input();
-                  this.screenNumber = 1;
-                  
-                  if(deleteUser)
-                  {
-                     userList = backend.deleteUser(userList, tempInput);
+                     System.out.println(" Multiple matches. Try using the CPR number. Type \"return\" to go back");
+                     System.out.print(" >");
+                     tempInput = input().toLowerCase();
+                     System.out.println("----------------------------------------------------------------");
+                     if(deleteUser) this.screenNumber = 45; 
+                     else this.screenNumber = 4;
+                     
+                     // Return to main Menu
+                     if(tempInput.equals("return"))
+                     {
+                        this.screenNumber = 1;
+                        break;
+                     }
                   }
                   else
                   {
-                     userList = backend.modifyUser(userList, tempInput, createNewUser(searchResults.get(0).getName()));
+                     // tempInput is the searchQuery that will have only one match.
+                     displayUsers(searchResults);                  
+                     System.out.println("----------------------------------------------------------------");
+                     repeat = false;
+                     System.out.println("all good, proceeding");
+                     //input();
+                     this.screenNumber = 1;
+                     
+                     if(deleteUser)
+                     {
+                        userList = backend.deleteUser(userList, tempInput);
+                     }
+                     else
+                     {
+                        userList = backend.modifyUser(userList, tempInput, createNewUser(searchResults.get(0).getName()));
+                     }
+                     backend.saveToFile(userList, fileName);
+                     searchResults = null;
                   }
-                  backend.saveToFile(userList, fileName);
-                  searchResults = null;
                }
-            }
-            break;
+               break;
+         }
       }
    }
    // Screen 5
@@ -292,9 +294,9 @@ public class Interface{
          System.out.print(" What is the name of the user ? If you want to return, type \"return\" \n");
          System.out.print(" >");
          
-         String tempInput = input().toLowerCase();
+         String tempInput = input();
          
-         switch(tempInput)
+         switch(tempInput.toLowerCase())
          {
             case "return": this.screenNumber = 1;  
                break;
